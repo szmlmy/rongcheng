@@ -93,12 +93,12 @@
 						<Button Content=" 查  询" x:Name="dansearchbutton" Grid.Row="1" Grid.Column="4" Click="{m:Exp Str=daninfosearch.DataContext.Search()}" Margin="13,1,7,-1" FontSize="14"  />
 						<StackPanel Grid.Row="1" Grid.Column="7" Orientation="Horizontal">
 						<Button Content=" 置  空"  Click="{m:Exp Str=daninfosearch.DataContext.f_yytdate1\=null;daninfosearch.DataContext.f_yytdate2\=null}" FontSize="14" HorizontalAlignment="Left" Width="60" />
-						<Button Content="导出Excel" Click="{m:Exp Str=toExcel.ToExcel()}"/>
+						<Button Content="导出Excel" Margin="10,0,0,0" Click="{m:Exp Str=toExcel.ToExcel()}"/>
 						
  						<c:Excel x:Name="toExcel" HQL="{m:Exp Str=$sql:\{daninfos.ItemsSource.HQL\}}" 
    							 Completed="{m:Exp Str=downLoad.Down()}"
-   							 Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/f_userid:用户编号|f_username:用户姓名|f_address:地址|lastinputdate:抄表日期|f_usermc:银行账户名|f_idofcard:银行账号|f_bankname:银行名称|oughtfee:代扣金额$}"/>
-					    <c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}"></c:DownLoad>
+   							 Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/RMB:币种|lastinputdate:提交日期|2:明细标志|index:顺序号|f_idofcard:付方卡号|f_userid:缴费编号|f_username:付方户名|f_bankname:收款单位开户行名|山东:省份|山东:收款方地区名|0200:收款方地区代码|0200026009333020489:收款账号|BDP300005490:协议编号|f_username:收款单位名称|oughtfee:付款金额|工资及退休金:用途| :备注| :付款账户短信通知手机号码| :自定义序号|1:是否工行账号| :付方账号开户行行号$}"/>	 
+                            <c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}"></c:DownLoad>
 						<!--Button Content="导出Excel" Click="{m:Exp Str=excel.Export()}"	toolkit:DockPanel.Dock="Right" Background="white" Grid.Column="7" Grid.Row="3"/-->
 						</StackPanel>
 								
@@ -149,7 +149,7 @@ and g.f_usertype\=\'\{daninfosearch.DataContext.f_usertype\}\'
 and t.f_userid \= g.f_userid 
 }"
 									HQL="{m:Exp Str=$
-select t.f_userid\,t.f_username\,t.f_address\,CONVERT(varchar(12) \, t.lastinputdate\, 111 ) ls\,g.f_usermc\,g.f_idofcard\,g.f_bankname\,t.oughtfee 
+select t.f_userid\,t.f_username\,t.f_address\,CONVERT(varchar(12) \, t.lastinputdate\, 111 ) ls\,g.f_usermc\,g.f_idofcard\,g.f_bankname\,Round(t.oughtfee\,2)  oughtfee
 from t_handplan t \,t_userfiles g
 where t.shifoujiaofei \= \'否\'  
 and t.f_state \= \'已抄表\' 

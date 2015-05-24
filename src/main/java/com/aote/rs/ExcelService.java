@@ -35,7 +35,7 @@ public class ExcelService {
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 
-	//导excel
+	// 导excel
 	@POST
 	@Path("/{count}/{cols}")
 	public String exporttoexcel(String query, @PathParam("count") int count,
@@ -100,14 +100,25 @@ public class ExcelService {
 					for (int z = 0; z < colsStr.length; z++) {
 						// 得到数据
 						String[] names = colsStr[z].split(":");
-						// 有别名，字段名为第一项，否则，整个是字段名
 						String colName = colsStr[z];
+						// 有别名，字段名为第一项，否则，整个是字段名
 						if (names.length > 1) {
 							colName = names[0];
 						}
 						String data = "";
-						if (map.get(colName) != null) {
-							data = map.get(colName).toString();
+						// 如果查询中含有改字段名，根据字段名取数据，否则，将列名当做数据内容
+						if (map.containsKey(colName)) {
+							if(map.get(colName) !=null)
+								data = map.get(colName).toString();
+							else
+					    	  	data = "";
+							
+						} else  if (colName.equals("index")){
+							data =rowNum+"";
+						}
+						else
+						{
+							data = colName;
 						}
 						cell = row.createCell((short) (z));
 						// 设置列类型
@@ -135,7 +146,7 @@ public class ExcelService {
 		}
 	}
 
-	//导excel
+	// 导excel
 	@POST
 	@Path("/{count}")
 	public String exporttoexcel2(String json, @PathParam("count") int count) {
