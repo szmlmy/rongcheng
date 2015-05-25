@@ -137,39 +137,41 @@
 								<a:Data.Items>
 									<o:PagedList x:Name="daninfoslist" WebClientInfo="{StaticResource dbclient}"
 									LoadOnPathChanged="False" IsOld="{m:Exp Str='dansearchbutton=>Click!=null'}"
-									Names="f_userid,f_username,f_address,ls,f_usermc,f_idofcard,f_bankname,oughtfee"
-									SumHQL="{m:Exp Str=$
-select t.f_userid\,t.f_username\,t.f_address\,CONVERT(varchar(12) \, t.lastinputdate\, 111 ) ls\,g.f_usermc\,g.f_idofcard\,g.f_bankname\,t.oughtfee 
-from t_handplan t \,t_userfiles g
-where t.shifoujiaofei \= \'否\'  
-and t.f_state \= \'已抄表\' 
-and g.f_payment \= \'银行代扣\'  
-and g.f_bankname\=\'\{daninfosearch.DataContext.f_bankname\}\' 
-and g.f_usertype\=\'\{daninfosearch.DataContext.f_usertype\}\'
-and t.f_userid \= g.f_userid 
-}"
-									HQL="{m:Exp Str=$
-select t.f_userid\,t.f_username\,t.f_address\,CONVERT(varchar(12) \, t.lastinputdate\, 111 ) ls\,g.f_usermc\,g.f_idofcard\,g.f_bankname\,Round(t.oughtfee\,2)  oughtfee
-from t_handplan t \,t_userfiles g
-where t.shifoujiaofei \= \'否\'  
-and t.f_state \= \'已抄表\' 
-and g.f_payment \= \'银行代扣\'  
-and g.f_bankname\=\'\{daninfosearch.DataContext.f_bankname\}\' 
-and g.f_usertype\=\'\{daninfosearch.DataContext.f_usertype\}\'
-and t.f_userid \= g.f_userid 
-order by t.id
-}"
- 
-									Path="sql" PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames=","/>
-								</a:Data.Items>
+									Names="f_userid,f_username,f_address,f_usermc,f_idofcard,f_bankname,oughtfee,ls"
+                                                 	Path="sql" PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames=",">
+                                     <o:PagedList.SumHQL>
+                                    <m:Exp Str="$select t.f_userid,t.f_username,t.f_address,g.f_usermc,g.f_idofcard,g.f_bankname,Round(SUM(t.oughtfee) - g.f_zhye,2) oughtfee  ,CONVERT(varchar(12) , GETDATE(), 111 ) ls 
+                                                from t_handplan t ,t_userfiles g 
+                                                where t.shifoujiaofei = '否'   and t.f_state = '已抄表'  and g.f_payment = '银行代扣'  
+                                               and g.f_bankname='{daninfosearch.DataContext.f_bankname}' 
+                                                and g.f_usertype='{daninfosearch.DataContext.f_usertype}'
+                                                and t.f_userid = g.f_userid   
+                                               group by t.f_userid,t.f_username,t.f_address, 
+                                               g.f_usermc,g.f_idofcard,g.f_bankname,g.f_zhye
+                                               having SUM(t.oughtfee) - g.f_zhye  >0  "  />
+                                       </o:PagedList.SumHQL>
+                                     <o:PagedList.HQL>
+                                    <m:Exp Str="$select t.f_userid,t.f_username,t.f_address,g.f_usermc,g.f_idofcard,g.f_bankname,Round(SUM(t.oughtfee) - g.f_zhye,2)  oughtfee ,CONVERT(varchar(12) , GETDATE(), 111 ) ls 
+                                                from t_handplan t ,t_userfiles g 
+                                                where t.shifoujiaofei = '否'   and t.f_state = '已抄表'  and g.f_payment = '银行代扣'  
+                                               and g.f_bankname='{daninfosearch.DataContext.f_bankname}' 
+                                                and g.f_usertype='{daninfosearch.DataContext.f_usertype}'
+                                                and t.f_userid = g.f_userid   
+                                               group by t.f_userid,t.f_username,t.f_address, 
+                                               g.f_usermc,g.f_idofcard,g.f_bankname,g.f_zhye
+                                               having SUM(t.oughtfee) - g.f_zhye>0   order by t.f_userid"/>
+                                        
+                                       </o:PagedList.HQL>
+                                </o:PagedList>
+                		</a:Data.Items>
 								<sdk:DataGrid.Columns>
 									<sdk:DataGridTextColumn Header="用户编号" Binding="{Binding f_userid}"/>
 									<sdk:DataGridTextColumn Header="姓    名" Binding="{Binding f_username}"/>
 									<sdk:DataGridTextColumn Header="地    址" Binding="{Binding f_address}"/>
-									<sdk:DataGridTextColumn Header="抄表日期" Binding="{Binding ls}"/>
-									<sdk:DataGridTextColumn Header="开户名" Binding="{Binding f_usermc}"/>
-									<sdk:DataGridTextColumn Header="开户号" Binding="{Binding f_idofcard}"/>
-									<sdk:DataGridTextColumn Header="银行名" Binding="{Binding f_bankname}"/>
+									<sdk:DataGridTextColumn Header="日    期" Binding="{Binding ls}"/>
+									<sdk:DataGridTextColumn Header="开 户 名" Binding="{Binding f_usermc}"/>
+									<sdk:DataGridTextColumn Header="开 户 号" Binding="{Binding f_idofcard}"/>
+									<sdk:DataGridTextColumn Header="银 行 名" Binding="{Binding f_bankname}"/>
 									<sdk:DataGridTextColumn Header="应交金额" Binding="{Binding oughtfee}"/>					
 								</sdk:DataGrid.Columns>
 							</sdk:DataGrid>
