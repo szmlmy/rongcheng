@@ -78,6 +78,7 @@ import sun.misc.BASE64Encoder;
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import com.aote.expression.ExpressionGenerator;
+import com.aote.rs.util.FileHelper;
 
 /**
  * 命名规则： query,get开头的是只读事务 tx开始的是读写事务 xt开头的是手动控制事务
@@ -1042,22 +1043,47 @@ public class DBService {
 	public String txSavefile(byte[] file,
 			@QueryParam("FileName") String filename,
 			@QueryParam("BlobId") String blob_id,
-			@QueryParam("EntityName") String EntityName) {
+			@QueryParam("EntityName") String EntityName,
+			@QueryParam("SaveMode") String SaveMode,
+			@QueryParam("BusinessType") String BusinessType) {
 		String result = null;
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
 			map.put("filename", filename);
 			map.put("id", blob_id);
-			map.put("blob", Hibernate.createBlob(file));
+			map.put("bussinesstype", BusinessType);
+			// 文件保存模式
+			if (SaveMode != null && SaveMode.equals("file")) {
+				String fileFullPath = this.getFilePath() + "\\" + blob_id + "_"
+						+ filename;
+				FileHelper.createFile(fileFullPath, file);
+				map.put("filefullpath", fileFullPath);
+			} else {
+				map.put("blob", Hibernate.createBlob(file));
+			}
 			this.sessionFactory.getCurrentSession().saveOrUpdate(EntityName,
 					map);
 			this.sessionFactory.getCurrentSession().flush();
 			result = "";
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new WebApplicationException(500);
 		} finally {
 			return result;
 		}
+	}
+
+	private String getFilePath() {
+		String result = "";
+		String hql = "from t_singlevalue where name='文件存储路径'";
+		List list = executeFind(sessionFactory.getCurrentSession(),
+				new HibernateCall(hql, 0, 10));
+		if (list.size() != 1) {
+			throw new RuntimeException("单值 存储文件路径 不存在");
+		}
+		Map<String, Object> map = (Map<String, Object>) list.get(0);
+		result = map.get("value").toString();
+		return result;
 	}
 
 	// 获得图片
