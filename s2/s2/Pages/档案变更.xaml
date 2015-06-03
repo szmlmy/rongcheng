@@ -317,7 +317,7 @@
                     </toolkit:DockPanel>
                 </Border>
             </c:BusyIndicatorEx>
-            <c:BusyIndicatorEx BusyContent="正在工作，请稍等" IsBusy="{m:Exp Str=userfile.DataContext.IsBusy or SaveAction.IsBusy}" Margin="5,0,0,0" Grid.Column="1" >
+            <c:BusyIndicatorEx BusyContent="正在工作，请稍等" IsBusy="{m:Exp Str=userfile.DataContext.IsBusy or SaveAction.IsBusy or userfile.IsBusy}" Margin="5,0,0,0" Grid.Column="1" >
                 <toolkit:DockPanel>
                     <!--按钮-->
                     <toolkit:DockPanel toolkit:DockPanel.Dock="Bottom" HorizontalAlignment="Center" VerticalAlignment="Center" >
@@ -863,6 +863,7 @@
                 </toolkit:DockPanel>
             </c:BusyIndicatorEx>
         </Grid>
-               
+        <c:MessageTipObj Tip="{m:Exp  Str=$保存失败\,请重新查询后操作$}" IsShow="{m:Exp Str=SaveAction.State\=\=$Error}"/>
+
     </Grid>
 </UserControl>
