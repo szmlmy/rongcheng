@@ -23,8 +23,8 @@
             <o:ObjectList Name="daninfoslist" EntityType="t_bankreturn" WebClientInfo="{StaticResource bank}" ></o:ObjectList>
 
             <!--通知对象，文件上传完成后，通知后台处理  -->
-            <o:GeneralObject Name="treatObj" EntityType="t_singlevalue" WebClientInfo="{StaticResource dbclient}" 
-		  		Path="{m:Exp Str=FileLoad.State\=\=$Load$ \:$/bank/payment/\{FileLoad.BlobId\}$\,$abc$ }"   ></o:GeneralObject>
+            <o:GeneralObject Name="treatObj" EntityType="t_singlevalue" WebClientInfo="{StaticResource server}" 
+		  		Path="{m:Exp Str=FileLoad.State\=\=$Loaded$ \:$bank/payment/\{FileLoad.BlobId\}$\,$abc$ }"   ></o:GeneralObject>
        
        
         </m:ResourceLoad>
@@ -88,6 +88,5 @@
 
         </Grid>
         <c:MessageTipObj Tip="{m:Exp Str=$上传文件失败，请重试！$}" IsShow="{m:Exp Str=FileLoad.State\=\=$LoadError$}"/>
-
-    </Grid>
+   </Grid>
 </UserControl>

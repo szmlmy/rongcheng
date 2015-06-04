@@ -62,4 +62,15 @@
 		class="com.aote.expression.paramprocessor.SingleProcessor">
 	</bean>
 	
+	
+		<!--银行Excel设置信息-->
+		<bean id="BankExcelSet" class="com.aote.rs.bank.bankreturn.BankExcelSet">
+			<property name="fields"  value="f_xunhao|f_userid|f_payfeetype|f_xieyihao|f_bizhong|f_shoufeizhanghao|f_shoufeidanwei|f_idofcard|f_usermc|oughtfee|dealfee|f_yongtu|paymenstate|f_cusxunhao|f_payfeetel|f_issend|f_note" />
+			<property name="startRow" value="6" />
+	</bean>
+	
+	 <!--银行返盘业务处理程序-->
+	 <bean id="BankReturnDispose"   	class="com.aote.rs.bank.bankreturn.RongChengBankReturn"/>
+	 
+	
 	</beans>
