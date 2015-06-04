@@ -62,7 +62,7 @@ public class ExcelService {
 				// 设置列类型
 				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 		 		// 设置列的字符集为中文
-				cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+				//cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
 				// 设置内容
 				String[] names = colsStr[titleCol].split(":");
 				// 有别名,设置内容为别名，否则，为字段名。
@@ -124,7 +124,7 @@ public class ExcelService {
 						// 设置列类型
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 						// 设置列的字符集为中文
-						cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+						//cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
 						cell.setCellValue(data);
 					}
 				}
