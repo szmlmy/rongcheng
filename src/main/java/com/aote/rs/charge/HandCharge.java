@@ -310,7 +310,7 @@ public class HandCharge {
 				stair4price);
 		// 气费大于0,结余够，前面无欠费，自动下账
 		if (chargenum.compareTo(BigDecimal.ZERO) > 0
-				&& chargenum.compareTo(f_zhye) < 0 && items < 1) {
+				&& chargenum.compareTo(f_zhye) <= 0 && items < 1) {
 			// 自动下账
 			double grossproceeds = 0;
 			Map<String, Object> sell = new HashMap<String, Object>();
