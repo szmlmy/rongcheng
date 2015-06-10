@@ -2,6 +2,7 @@ package com.aote.rs;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +19,14 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONObject;
+import org.hibernate.CacheMode;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
+import org.hibernate.StatelessSession;
+import org.hibernate.transform.AliasToEntityMapResultTransformer;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +42,7 @@ public class ExcelService {
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 
-	// 导excel
+	//导excel
 	@POST
 	@Path("/{count}/{cols}")
 	public String exporttoexcel(String query, @PathParam("count") int count,
@@ -43,73 +50,115 @@ public class ExcelService {
 		log.debug("in to excel count=" + count + ", cols=" + cols);
 		try {
 			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet();
-			HSSFFont font = workbook.createFont();
-			font.setColor((short) HSSFFont.COLOR_NORMAL);
-			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-			// 设置格式
-			HSSFCellStyle cellStyle = workbook.createCellStyle();
-			cellStyle.setAlignment((short) HSSFCellStyle.ALIGN_CENTER);
-			cellStyle.setFont(font);
-			HSSFRow row = null;
-			HSSFCell cell = null;
-			// 创建第0行 标题
-			int rowNum = 0;
-			row = sheet.createRow((short) rowNum);
+			int n = count;
+			int total = 0;
+			HSSFSheet sheet;
 			String[] colsStr = cols.split("\\|");
-			for (int titleCol = 0; titleCol < colsStr.length; titleCol++) {
-				cell = row.createCell((short) (titleCol));
-				// 设置列类型
-				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-		 		// 设置列的字符集为中文
-				//cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
-				// 设置内容
-				String[] names = colsStr[titleCol].split(":");
-				// 有别名,设置内容为别名，否则，为字段名。
-				if (names.length > 1) {
-					cell.setCellValue(names[1]);
-				} else {
-					cell.setCellValue(colsStr[titleCol]);
-				}
-				cell.setCellStyle(cellStyle);
+			while(n > 0)
+			{
+				sheet = workbook.createSheet();
+				HSSFFont font = workbook.createFont();
+				font.setColor((short) HSSFFont.COLOR_NORMAL);
+				font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+				// 设置格式
+				HSSFCellStyle cellStyle = workbook.createCellStyle();
+				cellStyle.setAlignment((short) HSSFCellStyle.ALIGN_CENTER);
+				cellStyle.setFont(font);
+				HSSFRow row = null;
+				HSSFCell cell = null;
+				// 创建第0行 标题
+				int rowNum = 0;
+				row = sheet.createRow((short) rowNum);
+				for (int titleCol = 0; titleCol < colsStr.length; titleCol++) {
+					cell = row.createCell((short) (titleCol));
+					// 设置列类型
+					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					// 设置列的字符集为中文
+					cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+					// 设置内容
+					String[] names = colsStr[titleCol].split(":");
+					// 有别名,设置内容为别名，否则，为字段名。
+					if (names.length > 1) {
+						cell.setCellValue(names[1]);
+					} else {
+						cell.setCellValue(colsStr[titleCol]);
+					}
+					cell.setCellStyle(cellStyle);
+				} 
+				
+				n -= 50000;
 			}
-
-			// 处理文件数据
-			int pageSize = 1000;
-			int pageCount = count % pageSize == 0 ? (count / pageSize)
-					: (count / pageSize) + 1;
-			for (int i = 0; i <= pageCount; i++) {
-				List list = null;
-				// 以sql:开始，说明是执行sql语句，否则，执行hql语句
-				if (query.startsWith("sql:")) {
-					String sql = query.substring(4);
-					HibernateSQLCall sqlCall = new HibernateSQLCall(sql, i,
-							pageSize);
-					sqlCall.transformer = Transformers.ALIAS_TO_ENTITY_MAP;
-					list = this.hibernateTemplate.executeFind(sqlCall);
-				} else {
-					list = this.hibernateTemplate
-							.executeFind(new HibernateCall(query, i, pageSize));
+			
+			sheet = workbook.getSheetAt(total);
+			int rowNum = 0;
+			
+			StatelessSession session = this.hibernateTemplate.getSessionFactory().openStatelessSession();
+			ScrollableResults sr;
+			if (query.startsWith("sql:")) {
+				String sql = query.substring(4);
+				SQLQuery sq = session.createSQLQuery(sql);
+				sr = sq.setFetchSize(1000).setReadOnly(true).scroll(ScrollMode.FORWARD_ONLY);
+				
+				Field f = sr.getClass().getSuperclass().getDeclaredField("loader");
+				f.setAccessible(true);
+				Object obj = f.get(sr);
+				f = obj.getClass().getDeclaredField("transformerAliases");
+				f.setAccessible(true);
+				String[] colNames = (String[])f.get(obj);
+				int[] idx = new int[colsStr.length];
+				for (int j = 0; j < idx.length; j++) {
+					 	idx[j] = -1;
+					 
+				 
+	 			}
+				
+				for (int i = 0; i < colNames.length; i++) {
+					for (int j = 0; j < idx.length; j++) {
+						if (colsStr[j].split(":")[0].equals(colNames[i])) {
+							idx[j] = i;
+						}
+					 
+		 			}
 				}
-				for (int j = 0; j < list.size(); j++) {
-					Object obj = list.get(j);
-					// 把单个map转换成JSON对象
-					Map<String, Object> map = (Map<String, Object>) obj;
+				while (sr.next()) {
+					Object[] map = sr.get();
 					rowNum++;
-					row = sheet.createRow((short) rowNum);
+					if(rowNum % 50001 == 0)
+					{
+						sheet = workbook.getSheetAt(++total);
+						rowNum = 1;
+					}
+					
+					HSSFRow row = sheet.createRow((short) rowNum);
+					
 					for (int z = 0; z < colsStr.length; z++) {
+
 						// 得到数据
 						String[] names = colsStr[z].split(":");
-						String colName = colsStr[z];
 						// 有别名，字段名为第一项，否则，整个是字段名
+						String colName = colsStr[z];
 						if (names.length > 1) {
 							colName = names[0];
 						}
 						String data = "";
+						if(idx[z] == -1)
+						{
+							data = colsStr[z].split(":")[0];
+							if(data.equals("index"))
+							{
+								data =rowNum+"";
+							}
+						}
+						else if (map[idx[z]] != null) {
+							data = map[idx[z]].toString();
+						}
+						
+						
+				 /**
 						// 如果查询中含有改字段名，根据字段名取数据，否则，将列名当做数据内容
 						if (map.containsKey(colName)) {
-							if(map.get(colName) !=null)
-								data = map.get(colName).toString();
+								if (map[idx[z]] != null) {
+								data = map[idx[z]].toString();
 							else
 					    	  	data = "";
 							
@@ -120,15 +169,52 @@ public class ExcelService {
 						{
 							data = colName;
 						}
-						cell = row.createCell((short) (z));
+						**/
+						HSSFCell cell = row.createCell((short) (z));
 						// 设置列类型
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 						// 设置列的字符集为中文
-						//cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+						cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+						cell.setCellValue(data);
+					}
+				}				
+			} else {
+				sr = session.createQuery(query).setFetchSize(1000).setReadOnly(true).scroll(ScrollMode.FORWARD_ONLY);
+				while (sr.next()) {
+					Map<String, Object> map = (Map<String, Object>)sr.get(0);
+					rowNum++;
+					
+					if(rowNum % 50000 == 0)
+					{
+						sheet = workbook.getSheetAt(++total);
+						rowNum = 1;
+					}
+					HSSFRow row = sheet.createRow((short) rowNum);
+					
+					for (int z = 0; z < colsStr.length; z++) {
+						// 得到数据
+						String[] names = colsStr[z].split(":");
+						// 有别名，字段名为第一项，否则，整个是字段名
+						String colName = colsStr[z];
+						if (names.length > 1) {
+							colName = names[0];
+						}
+						String data = "";
+						if (map.get(colName) != null) {
+							data = map.get(colName).toString();
+						}
+						HSSFCell cell = row.createCell((short) (z));
+						// 设置列类型
+						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+						// 设置列的字符集为中文
+						cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
 						cell.setCellValue(data);
 					}
 				}
 			}
+			
+			session.close();
+
 			// 产生临时文件
 			File file = File.createTempFile("temp", ".xls");
 			file.deleteOnExit();
@@ -146,7 +232,7 @@ public class ExcelService {
 		}
 	}
 
-	// 导excel
+	//导excel
 	@POST
 	@Path("/{count}")
 	public String exporttoexcel2(String json, @PathParam("count") int count) {
@@ -155,62 +241,117 @@ public class ExcelService {
 			String[] strs = json.split("~");
 			String query = strs[0];
 			String cols = strs[1];
-
+			int n = count;
+			int total = 0;
 			HSSFWorkbook workbook = new HSSFWorkbook();
-			HSSFSheet sheet = workbook.createSheet();
-			HSSFFont font = workbook.createFont();
-			font.setColor((short) HSSFFont.COLOR_NORMAL);
-			font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
-			// 设置格式
-			HSSFCellStyle cellStyle = workbook.createCellStyle();
-			cellStyle.setAlignment((short) HSSFCellStyle.ALIGN_CENTER);
-			cellStyle.setFont(font);
-			HSSFRow row = null;
-			HSSFCell cell = null;
-			// 创建第0行 标题
-			int rowNum = 0;
-			row = sheet.createRow((short) rowNum);
+			HSSFSheet sheet;
 			String[] colsStr = cols.split("\\|");
-			for (int titleCol = 0; titleCol < colsStr.length; titleCol++) {
-				cell = row.createCell((short) (titleCol));
-				// 设置列类型
-				cell.setCellType(HSSFCell.CELL_TYPE_STRING);
-				// 设置列的字符集为中文
-				cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
-				// 设置内容
-				String[] names = colsStr[titleCol].split(":");
-				// 有别名,设置内容为别名，否则，为字段名。
-				if (names.length > 1) {
-					cell.setCellValue(names[1]);
-				} else {
-					cell.setCellValue(colsStr[titleCol]);
+			while(n > 0)
+			{
+				sheet = workbook.createSheet();
+				HSSFFont font = workbook.createFont();
+				font.setColor((short) HSSFFont.COLOR_NORMAL);
+				font.setBoldweight((short) HSSFFont.BOLDWEIGHT_BOLD);
+				// 设置格式
+				HSSFCellStyle cellStyle = workbook.createCellStyle();
+				cellStyle.setAlignment((short) HSSFCellStyle.ALIGN_CENTER);
+				cellStyle.setFont(font);
+				HSSFRow row = null;
+				HSSFCell cell = null;
+				// 创建第0行 标题
+				int rowNum = 0;
+				row = sheet.createRow((short) rowNum);
+				for (int titleCol = 0; titleCol < colsStr.length; titleCol++) {
+					cell = row.createCell((short) (titleCol));
+					// 设置列类型
+					cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+					// 设置列的字符集为中文
+					cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+					// 设置内容
+					String[] names = colsStr[titleCol].split(":");
+					// 有别名,设置内容为别名，否则，为字段名。
+					if (names.length > 1) {
+						cell.setCellValue(names[1]);
+					} else {
+						cell.setCellValue(colsStr[titleCol]);
+					}
+					cell.setCellStyle(cellStyle);
 				}
-				cell.setCellStyle(cellStyle);
+				
+				n -= 50000;
 			}
+			
+			sheet = workbook.getSheetAt(total);
+			int rowNum = 0;
 
-			// 处理文件数据
-			int pageSize = 1000;
-			int pageCount = count % pageSize == 0 ? (count / pageSize)
-					: (count / pageSize) + 1;
-			for (int i = 0; i <= pageCount; i++) {
-				List list = null;
-				// 以sql:开始，说明是执行sql语句，否则，执行hql语句
-				if (query.startsWith("sql:")) {
-					String sql = query.substring(4);
-					HibernateSQLCall sqlCall = new HibernateSQLCall(sql, i,
-							pageSize);
-					sqlCall.transformer = Transformers.ALIAS_TO_ENTITY_MAP;
-					list = this.hibernateTemplate.executeFind(sqlCall);
-				} else {
-					list = this.hibernateTemplate
-							.executeFind(new HibernateCall(query, i, pageSize));
+			StatelessSession session = this.hibernateTemplate.getSessionFactory().openStatelessSession();
+			ScrollableResults sr;
+			if (query.startsWith("sql:")) {
+				String sql = query.substring(4);
+				sr = session.createSQLQuery(sql).setFetchSize(1000).setReadOnly(true).scroll(ScrollMode.FORWARD_ONLY);
+				
+				Field f = sr.getClass().getSuperclass().getDeclaredField("loader");
+				f.setAccessible(true);
+				Object obj = f.get(sr);
+				f = obj.getClass().getDeclaredField("transformerAliases");
+				f.setAccessible(true);
+				String[] colNames = (String[])f.get(obj);
+				int[] idx = new int[colsStr.length];
+				
+				for (int i = 0; i < colNames.length; i++) {
+					for (int j = 0; j < idx.length; j++) {
+						if (colsStr[j].split(":")[0].equals(colNames[i])) {
+							idx[j] = i;
+						}
+					}
 				}
-				for (int j = 0; j < list.size(); j++) {
-					Object obj = list.get(j);
-					// 把单个map转换成JSON对象
-					Map<String, Object> map = (Map<String, Object>) obj;
+				
+				while (sr.next()) {
+					Object[] map = sr.get();
 					rowNum++;
-					row = sheet.createRow((short) rowNum);
+					
+					if(rowNum % 50001 == 0)
+					{
+						sheet = workbook.getSheetAt(++total);
+						rowNum = 1;
+					}
+					
+					HSSFRow row = sheet.createRow((short) rowNum);
+						
+					for (int z = 0; z < colsStr.length; z++) {
+						// 得到数据
+						String[] names = colsStr[z].split(":");
+						// 有别名，字段名为第一项，否则，整个是字段名
+						String colName = colsStr[z];
+						if (names.length > 1) {
+							colName = names[0];
+						}
+						String data = "";
+						if (map[idx[z]] != null) {
+							data = map[idx[z]].toString();
+						}
+						HSSFCell cell = row.createCell((short) (z));
+						// 设置列类型
+						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
+						// 设置列的字符集为中文
+						cell.setEncoding((short) HSSFCell.ENCODING_UTF_16);
+						cell.setCellValue(data);
+					}
+				}				
+			} else {
+				sr = session.createQuery(query).setFetchSize(1000).setReadOnly(true).scroll(ScrollMode.FORWARD_ONLY);
+				while (sr.next()) {
+					Map<String, Object> map = (Map<String, Object>)sr.get(0);
+					rowNum++;
+					
+					if(rowNum % 50000 == 0)
+					{
+						sheet = workbook.getSheetAt(++total);
+						rowNum = 1;
+					}
+					
+					HSSFRow row = sheet.createRow((short) rowNum);
+						
 					for (int z = 0; z < colsStr.length; z++) {
 						// 得到数据
 						String[] names = colsStr[z].split(":");
@@ -223,7 +364,7 @@ public class ExcelService {
 						if (map.get(colName) != null) {
 							data = map.get(colName).toString();
 						}
-						cell = row.createCell((short) (z));
+						HSSFCell cell = row.createCell((short) (z));
 						// 设置列类型
 						cell.setCellType(HSSFCell.CELL_TYPE_STRING);
 						// 设置列的字符集为中文
@@ -232,6 +373,7 @@ public class ExcelService {
 					}
 				}
 			}
+			session.close();
 			// 产生临时文件
 			File file = File.createTempFile("temp", ".xls");
 			file.deleteOnExit();
