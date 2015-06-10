@@ -139,6 +139,12 @@
     <Compile Include="Pages\卡表转气.xaml.cs">
       <DependentUpon>卡表转气.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\报表\营业年统计报表.xaml.cs">
+      <DependentUpon>营业年统计报表.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\报表\营业月报表统计.xaml.cs">
+      <DependentUpon>营业月报表统计.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\机表转气.xaml.cs">
       <DependentUpon>机表转气.xaml</DependentUpon>
     </Compile>
@@ -1502,6 +1508,14 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\卡表转气.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\报表\营业年统计报表.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\报表\营业月报表统计.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
