@@ -165,9 +165,11 @@
                                     <sdk:DataGridTextColumn Header="转出气价" Binding="{Binding f_gasprice}" />-->
 									<sdk:DataGridTextColumn Header="开户日期" Binding="{Binding f_dateofopening,StringFormat=yyyy-MM-dd}"/>
 									<sdk:DataGridTextColumn Header="余气量" Binding="{Binding f_remaingas}"/>
-									<sdk:DataGridTextColumn Header="累计购气量" Binding="{Binding f_allgasnum}"/>
-									
-									<sdk:DataGridTextColumn Header="转出/转入气量" Binding="{Binding f_outgasno}" />
+                            <sdk:DataGridTextColumn Header="转出前累计购气量" Binding="{Binding f_allgasnum}"/>
+                            <sdk:DataGridTextColumn Header="转出后累计购气量" Binding="{Binding f_watchreading}"/>
+                            
+
+                            <sdk:DataGridTextColumn Header="转出/转入气量" Binding="{Binding f_outgasno}" />
 									<sdk:DataGridTextColumn Header="转出金额" Binding="{Binding f_outmoney}" />
 
                             <!--	<sdk:DataGridTextColumn Header="转出前维修费截止日期" Binding="{Binding f_beginfee,StringFormat=yyyy-MM-dd}" />
@@ -181,8 +183,9 @@
 									<sdk:DataGridTextColumn Header="转入表号" Binding="{Binding f_inwatchno}" />
 									<sdk:DataGridTextColumn Header="转入气价" Binding="{Binding f_newgasprice}" />-->
 									<sdk:DataGridTextColumn Header="转入原累计购气量" Binding="{Binding f_oldsumgasno}" />
-									<sdk:DataGridTextColumn Header="转入现累计购气量" Binding="{Binding f_newsumgasno}" />
-									<sdk:DataGridTextColumn Header="转入金额" Binding="{Binding f_newmoney}" />
+                            <sdk:DataGridTextColumn Header="转入现累计购气量" Binding="{Binding f_newsumgasno}" />
+                            <sdk:DataGridTextColumn Header="转入前金额" Binding="{Binding  f_zyryhjy}" />
+                            <sdk:DataGridTextColumn Header="转入后金额" Binding="{Binding f_newmoney}" />
                             <!--<sdk:DataGridTextColumn Header="转入前维修费截止日期" Binding="{Binding f_inbeginfee,StringFormat=yyyy-MM-dd}" />
 									<sdk:DataGridTextColumn Header="转入后维修费截止日期" Binding="{Binding f_innewbeginfee,StringFormat=yyyy-MM-dd}" />-->
 									<sdk:DataGridTextColumn Header="转费日期" Binding="{Binding f_outfeetime,StringFormat=yyyy-MM-dd}"/>

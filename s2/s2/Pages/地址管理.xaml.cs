@@ -667,7 +667,7 @@ namespace s2.Pages
                 return;
             }
 
-            object addressId = (sender as GeneralObject).GetPropertyValue("id").ToString();
+            object addressId = (sender as GeneralObject).GetPropertyValue("ID").ToString();
  //IID, Name, Remark, Level, PID, ResidentialAreaName, rank, ID, addressId
  //arguments = new object[] { iid, newName, remark, rank, level, pid };
             GeneralObject address = new GeneralObject();

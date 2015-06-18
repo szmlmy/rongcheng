@@ -239,7 +239,7 @@
 							>
                                 <sdk:DataGrid.Columns>
                                     <sdk:DataGridTextColumn d:IsLocked="True" Header="序号" Binding="{Binding Index}"/>
-                                    <sdk:DataGridTextColumn Header="街  道" Binding="{Binding f_road}"/>
+                                    <!-- <sdk:DataGridTextColumn Header="街  道" Binding="{Binding f_road}"/>-->
                                     <sdk:DataGridTextColumn Header="小  区" Binding="{Binding f_districtname}"/>
                                     <sdk:DataGridTextColumn Header="建档状态" Binding="{Binding f_state}"/>
                                     <sdk:DataGridTextColumn Header="楼  号" Binding="{Binding f_cusDom}"/>
@@ -262,7 +262,7 @@
                         <Button x:Name="savefk" Content="保存并发卡" Margin="5" 
 							IsEnabled="{m:Exp Str=!userfilego.HasErrors }" 
 							Click="{m:Exp Str=SaveFaKaAction.Invoke()}" Width="82" />
-                        <Button x:Name="cancel" Content="撤  销" Margin="5" Click="{m:Exp Str=userfile.DataContext.New()}" Width="50"/>
+                        <Button x:Name="cancel" Content="撤  销" Margin="5" Click="{m:Exp Str=userfile.DataContext.New();temp.New()}" Width="50"/>
                     </toolkit:DockPanel>
                     <Grid x:Name="userfile" DataContext="{m:Exp Str=userfilego}" Margin="0,0,0,20" >
                         <!--非民用主操作区-->
@@ -687,7 +687,7 @@
                                                 </DataTemplate>
                                             </ComboBox.ItemTemplate>
                                             <a:Data.Prop>
-                                                <o:PropertySetter PropertyName="f_stairtype" NoDependValue="{m:Exp Str=stairlist.SelectedItem.f_stairtype}" NotNull="True"/>
+                                                <o:PropertySetter PropertyName="f_stairtype" NoDependValue="{m:Exp Str=stairlist.SelectedItem.f_stairtype}" />
                                             </a:Data.Prop>
                                         </ComboBox>
                                         <!--阶梯气价隐藏域-->

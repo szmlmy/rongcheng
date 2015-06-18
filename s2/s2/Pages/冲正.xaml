@@ -140,7 +140,7 @@
         <b:HQLAction Name="InsertSellingGas" Type="sql"     WebClientInfo="{StaticResource dbclient}">
                 <b:HQLAction.HQL   >
                     <m:Exp Str="$insert into t_sellinggas(f_userid, f_pregas, f_preamount, f_grossproceeds,f_gasprice,f_cardid,f_username,f_address,f_districtname
-                           ,f_sgoperator, f_deliverytime, f_deliverydate, f_filiale, f_sgnetwork, f_gaspricetype,f_gaswatchbrand,f_usertyp,
+                           ,f_sgoperator, f_deliverytime, f_deliverydate, f_filiale, f_sgnetwork, f_gaspricetype,f_gaswatchbrand,f_usertype,
                            f_payfeevalid)
                            values('{sellinggas.f_userid}', -{sellinggas.f_pregas}, -{sellinggas.f_preamount}, -{sellinggas.f_grossproceeds},{sellinggas.f_gasprice},{sellinggas.f_cardid},'{sellinggas.f_username==null:$null$,sellinggas.f_username}','{sellinggas.f_address==null:$null$,sellinggas.f_address}','{sellinggas.f_districtname==null:$null$,sellinggas.f_districtname}',
                            '{userfilego.f_reversalname==null:$null$,userfilego.f_reversalname}', '{userfilego.f_reversaltime==null:$null$,userfilego.f_reversaltime}','{userfilego.f_reversaldate==null:$null$,userfilego.f_reversaldate}', '{userfilego.f_filiale==null:$null$,userfilego.f_filiale}', '{userfilego.f_sgnetwork==null:$null$,userfilego.f_sgnetwork}',
@@ -530,14 +530,14 @@
 									<a:Data.Prop>
 										<o:PropertySetter PropertyName="f_maichong" Value="{m:Exp Str=users.f_maichong\=&gt;Completed}"/>
 									</a:Data.Prop>
-								</TextBox> 
-								<TextBlock Grid.Column="2" Margin="0" Grid.Row="10" TextWrapping="Wrap" TextAlignment="Right" Height="25"><Run Text="交费"/><Run Text="时间"/><Run Text="："/></TextBlock>
-							    <toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="3" Margin="0" Grid.Row="10"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
-							<a:Data.Prop>
-										<o:PropertySetter PropertyName="f_deliverytime" />
-									</a:Data.Prop>
-								</toolkit:TimePicker>
-								<TextBlock Grid.Column="2" Margin="0" Grid.Row="13" Text="冲正时间：" TextAlignment="Right" Height="25"></TextBlock>
+								</TextBox>
+                            <TextBlock Grid.Column="2" Margin="0" Grid.Row="10" TextWrapping="Wrap" TextAlignment="Right" Height="25"><Run Text="交费"/><Run Text="时间"/><Run Text="："/></TextBlock>
+                            <toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="3" Margin="0" Grid.Row="10"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
+                                <a:Data.Prop>
+                                    <o:PropertySetter PropertyName="f_deliverytime" />
+                                </a:Data.Prop>
+                            </toolkit:TimePicker>
+                            <TextBlock Grid.Column="2" Margin="0" Grid.Row="13" Text="冲正时间：" TextAlignment="Right" Height="25"></TextBlock>
                             <toolkit:TimePicker Value="{m:Bind Path=f_reversaltime}" IsEnabled="False" Grid.Column="3" Margin="0" Grid.Row="13"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
                                 <a:Data.Prop>
                                     <o:PropertySetter PropertyName="f_reversaltime" Value="{m:Exp Str=SecRefresh\=&gt;TimeEvent!\=null:SysTime.Now\,$$}"/>

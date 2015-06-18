@@ -28,8 +28,9 @@
        
        
         </m:ResourceLoad>
+        <!--
         <c:FileLoad Name="FileLoad" EntityName="t_blob"  BlobId="{Binding Path=BlobId,Mode=TwoWay}" SaveMode="file" BusinessType="银行返盘" Path="{m:Exp Str='${dbclient.BaseAddress}/savefile$'}"  />
-
+-->
         <Grid>
 
             <Grid.ColumnDefinitions>
