@@ -1,7 +1,10 @@
 package com.aote.rs;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,6 +20,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 
 import org.apache.http.HttpEntity;
@@ -40,6 +44,7 @@ import org.springframework.orm.hibernate3.HibernateCallback;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.stereotype.Component;
 
+import com.aote.rs.charge.HandCharge;
 import com.aote.rs.util.CalculateStairsPrice;
 
 
@@ -47,7 +52,7 @@ import com.aote.rs.util.CalculateStairsPrice;
 @Component
 public class IndoorInspectService {
 	static Logger log = Logger.getLogger(IndoorInspectService.class);
-
+	boolean flag = false;
 	@Autowired
 	private HibernateTemplate hibernateTemplate;
 	
@@ -62,6 +67,8 @@ public class IndoorInspectService {
 			String uuid = row.getString("ID");
 			String planId = row.getString("CHECKPLAN_ID");
 			String state = row.getString("CONDITION");
+			String userid = row.getString("f_userid");
+
 			DeletePossiblePriorRow(uuid, state);
 			if(InsertNewRow(row))
 				return "{\"ok\":\"ok\"}";
@@ -114,6 +121,73 @@ public class IndoorInspectService {
 	}
 
 
+	@Path("SearchSCInfo/{f_userid}")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public String SearchInfo(@PathParam("f_userid") String f_userid) {
+		log.debug("查询上次安检记录");
+		try {
+			final String sql = "select f_jujian,f_sibiao,f_changtong,f_fanzhuang,f_qblouqi,f_reading_mismatch,f_meter_wrapped,f_meter_hanger"+
+",f_meter_nearfire,f_meter_xiushi,f_lgsigai,f_lglouqi,f_lgbaoguo,f_lgguawu,f_lghuoyuan,f_lgweiguding,f_lgchuanyue,f_lgfushi"+
+",f_plumbing_leakage_valve,f_plumbing_leakage_scaleknot,f_plumbing_leakage_slipknot,f_bhgbaoguan,f_bhgguawu,f_bhglouqi,f_bhgjinzhiquyu"+
+",f_bhgdianyuan,f_bhggaiguan,f_bhgfushi,f_bhgwxd,f_heat_radiation,f_jpglouqi,f_jpglaohua,f_jpgguochang,f_jpgwuguanjia,f_jpgdiaoding"+
+",f_cooker_overdue,f_cooker_nofireprotection,f_heater_overdue,f_heater_softconnector,f_heater_trapped,f_heater_leakage,f_bothyandao"+
+",f_furnace_overdue,f_furnace_softconnector,f_furnace_trapped,f_furnace_leakage,f_precaution_kitchen,f_precaution_multisource"+
+",f_heater_leakage_connetor,f_heater_leakage_valve,f_heater_leakage_heater"+
+",f_furnace_leakage_connetor,f_furnace_leakage_valve,f_furnace_leakage_furnace,f_rgcq,f_rgyjk,f_dxssfylg,"+
+"f_consumername,f_renkou,f_kahao,f_biaohao,f_consumerphone,f_alarm_installation_time,f_alarm_expire_time,f_zuzhu,f_property,f_iszhongdian,f_gongnuan,f_baojingqi,f_baojingqichang"+
+",f_meter_type,f_rqbiaoxing,f_biaochang,f_kachangjia,f_meter_manufacture_date,f_meter_manufacfalse_date,f_installationlocation,f_TIE from T_INSPECTION t where t.f_userid = '" + f_userid + "' order by ARRIVAL_TIME desc";
+			List list = (List) hibernateTemplate
+				.execute(new HibernateCallback() {	
+					@Override
+					public Object doInHibernate(Session session) 
+						throws HibernateException,
+							SQLException {
+						SQLQuery query = session.createSQLQuery(sql);
+						return query.list();
+					}
+				});
+			if(list.size() == 0)
+				return "{\"ok\":\"nook\"}";
+			Object obj = list.get(0);
+			JSONObject json = new JSONObject();
+			for (Object obj1 : list) {
+				// 把单个map转换成JSON对象
+				Object[] c = (Object[]) obj1;
+				for (int i = 0; i < c.length; i++) {
+					try {
+						json.put("col" + i, c[i]);
+					} catch (JSONException e) {
+						throw new WebApplicationException(400);
+					}
+				}
+				break;
+			}
+			return json.toString();			
+		} catch (Exception e) {
+			return "{\"ok\":\"nok\"}";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * 插入入户安检数据
@@ -283,12 +357,32 @@ public class IndoorInspectService {
 			String uuid = row.getString("ID");
 			String planId = row.getString("CHECKPLAN_ID");
 			String state = row.getString("CONDITION");
+			String userid = row.getString("f_userid");
+			final	String sq ="select * from T_INSPECTION where f_userid="+userid+" and CHECKPLAN_ID="+planId+"";
+			List list1 = (List) hibernateTemplate
+					.execute(new HibernateCallback() {
+						public Object doInHibernate(Session session)
+								throws HibernateException {
+							SQLQuery query = session.createSQLQuery(sq);
+							return query.list();
+						}
+					});
+			if(list1.size()==1){
+				flag = true;
+			}
 			CADeletePossiblePriorRow(uuid, state);
-			if(CAInsertNewRow(row,operator,department))
+			if(CAInsertNewRow(row,operator,department, flag))
+			{
+				flag = false;
 				return "{\"ok\":\"ok\"}";
+			}
 			else
-				return "{\"ok\":\"nok\"}";				
+			{
+				flag = false;
+				return "{\"ok\":\"nok\"}";
+			}
 		} catch (JSONException e) {
+			flag = false;
 			return "{\"ok\":\"nok\"}";
 		}
 	}
@@ -455,7 +549,7 @@ public class IndoorInspectService {
 	 * @param row
 	 * @throws JSONException 
 	 */
-	private boolean CAInsertNewRow(JSONObject row,String operator,String department) throws JSONException {
+	private boolean CAInsertNewRow(JSONObject row,String operator,String department, boolean flag) throws JSONException {
 			String uuid = row.getString("ID");
 			String condition = row.getString("CONDITION");
 			String userid = row.getString("f_userid");
@@ -539,6 +633,7 @@ public class IndoorInspectService {
 					execSQL(sql1);
 					sb.append(line.getString("EQUIPMENT")+":"+line.getString("NAME")+"\n");
 				}
+				
 				String state = "'未派发'";
 				String accepter = null;
 				String substate = null;
@@ -584,6 +679,99 @@ public class IndoorInspectService {
 						senddate+","+sendtime+")";
 				execSQL(updateSQL);
 			}
+/*查询安检单，看该安检单是否上上传。
+ * T_INSPECTION，如果有证明有，直接return true
+ * 
+ * */			
+			
+
+			if(true == flag)
+				return true;
+			
+	/*以下是安检抄表程序
+	 * 从档案里面提取该用户的一些基本信息
+	 * 例如：上次抄表数，用户类型，气价等*/
+			final	String sql ="select lastinputgasnum,f_usertype,f_gasprice,f_gaspricetype,f_yhxz,f_weizhi from t_userfiles  where f_userid="+userid+"";
+			List list0 = (List) hibernateTemplate
+					.execute(new HibernateCallback() {
+						public Object doInHibernate(Session session)
+								throws HibernateException {
+							SQLQuery query = session.createSQLQuery(sql);
+							return query.list();
+						}
+					});
+		
+			if(list0.size()==1){
+				Object [] o0=(Object[]) list0.get(0);
+				double d1=Double.parseDouble(o0[0]+"");
+				String f_usertype="'" + o0[1] + "'";
+				String f_gasprice="'" + o0[2] + "'";
+				String f_gaspricetype="'" + o0[3] + "'";
+				String f_yhxz="'" + o0[4] + "'";
+				String f_weizhi="'" + o0[5] + "'";
+				String s2=o0[0]+"";
+//判断上次抄表数是否为空				|| s2.equals("")
+				if(s2!=null){
+//	当本次抄表数大于上次抄表数时，生成抄表单				
+					if(Double.parseDouble(row.getString("f_jbdushu"))>d1){
+						updateSQL = "insert into t_handplan(f_userid, f_username, lastinputgasnum, f_gaswatchbrand, f_metertype,"+
+									"f_address, f_districtname, f_usertype, f_gasprice, f_gaspricetype,  f_apartment,"+
+									"f_phone, f_inputtor, f_yhxz, f_weizhi,"+
+									"f_state, shifoujiaofei, f_cusDom, f_cusDy)"+ 
+								"VALUES("+userid+","+row.getString("f_consumername")+","+d1+","+row.getString("f_biaochang")+","
+								+row.getString("f_meter_type")+","+"'"+row.getString("UNIT_NAME").replace("'", "")+row.getString("CUS_DOM").replace("'", "")+
+								row.getString("CUS_DY").replace("'", "")+row.getString("CUS_FLOOR").replace("'", "")+row.getString("CUS_ROOM").replace("'", "")+"',"
+								+row.getString("UNIT_NAME")+","+f_usertype+","+f_gasprice+","+f_gaspricetype+","+
+								row.getString("CUS_ROOM")+","+row.getString("f_consumerphone")+","+row.getString("SAVE_PEOPLE")
+								+","+f_yhxz+","+f_weizhi+","+"'未抄表'"+","+"'否'"+","+row.getString("CUS_DOM")+","+row.getString("CUS_DY")+
+								")";
+						execSQL(updateSQL);
+						
+
+						Double jbds = Double.parseDouble(row.getString("f_jbdushu"));
+						String wd=row.getString("SAVE_PEOPLE").replace("'", "");
+						Date now = new Date();
+						Calendar cal = Calendar.getInstance();
+						DateFormat d23 = new SimpleDateFormat("yyyy-MM-dd");
+						String cbrq = d23.format(now).replace("'", "");
+						DateFormat d24 = new SimpleDateFormat("yyyy-MM");
+						String month = d24.format(now).replace("'", "");
+						
+						String url = "http://127.0.0.1:8080/rs/handcharge/record/one/"+userid.replace("'", "")+"/"+jbds+"/"+wd+"/"+wd+"/"+cbrq+"/"+month+"/"+"正常";
+						DefaultHttpClient httpclient = new DefaultHttpClient();
+						try {
+							HttpGet getRequest = new HttpGet(url);
+							HttpResponse httpResponse = httpclient.execute(getRequest);
+							HttpEntity entity = httpResponse.getEntity();
+							if (entity != null){
+								String info = EntityUtils.toString(entity);
+							   if("".equals(info))
+								   return false;
+						    }
+							else
+								return false;
+							httpclient.getConnectionManager().shutdown();
+
+						} catch (Exception e) {
+							httpclient.getConnectionManager().shutdown();
+							throw new WebApplicationException(400);
+						} 
+						
+						
+						
+						
+						
+					}
+					else 
+						return false;
+					
+				}
+				else
+					return false;
+
+			}
+			
+
 			DeletePics(uuid.replace("'", ""));
 			return true;
 	}

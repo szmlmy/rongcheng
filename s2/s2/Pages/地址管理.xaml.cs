@@ -717,6 +717,23 @@ namespace s2.Pages
             }
             curItem = root;
             btnRefresh_Click(null, null);
+        }
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            string xqname = xq.Text;
+            ItemCollection list = root.Items;
+            int idx = -1;
+            for (int i = 0; i < list.Count; i++)
+            {
+                TreeViewItem item = list[i] as TreeViewItem;
+                if (item.Header.ToString() == xqname)
+                {
+                    idx = i;
+                }
+            }
+            if (idx != -1)
+                (root.Items[idx] as TreeViewItem).IsSelected = true;
         }   
 }
 

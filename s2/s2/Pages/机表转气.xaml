@@ -60,8 +60,55 @@
                 <b:BatchInfo Source="{m:Exp Str=UpdateUserFileOut}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=UpdateUserFile}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=kbfee}" MethodName="SaveToJson"/>
-
+                <b:BatchInfo Source="{m:Exp Str=into}" MethodName="SaveToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=out}" MethodName="SaveToJson"/>
             </b:BatchExcuteAction>
+
+
+
+
+            <o:GeneralObject Name="into" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}"   IsInit="{m:Exp Str=SaveAction\=\=$Error$}">
+
+                <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_userid}"/>
+                <o:PropertySetter PropertyName="f_preamount" NoDependValue="{m:Exp Str=kbfee.f_outmoney}"/>
+                <o:PropertySetter PropertyName="f_gasprice" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_gasprice}"/>
+                <o:PropertySetter PropertyName="f_cardid" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_cardid}"/>
+                <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_username}"/>
+                <o:PropertySetter PropertyName="f_address" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_address}"/>
+                <o:PropertySetter PropertyName="f_districtname" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_districtname}"/>
+                <o:PropertySetter PropertyName="f_sgoperator" NoDependValue="{m:Exp Str=kbfee.f_sgoperator}"/>
+                <o:PropertySetter PropertyName="f_deliverydate" NoDependValue="{m:Exp Str=kbfee.f_outfeetime}"/>
+                <o:PropertySetter PropertyName="f_filiale" NoDependValue="{m:Exp Str=kbfee.f_filiale}"/>
+                <o:PropertySetter PropertyName="f_sgnetwork" NoDependValue="{m:Exp Str=kbfee.f_sgnetwork}"/>
+                <o:PropertySetter PropertyName="f_gaspricetype" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_gaspricetype}"/>
+                <o:PropertySetter PropertyName="f_gaswatchbrand" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_gaswatchbrand}"/>
+                <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_usertype}"/>
+                <o:PropertySetter PropertyName="f_payfeevalid" Default="机表转气"/>
+            </o:GeneralObject>
+
+            <o:GeneralObject Name="out" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}"   IsInit="{m:Exp Str=SaveAction\=\=$Error$}">
+                <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_userid}"/>
+                <o:PropertySetter PropertyName="f_preamount" NoDependValue="{m:Exp Str=-kbfee.f_outmoney}"/>
+                <o:PropertySetter PropertyName="f_gasprice" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gasprice}"/>
+                <o:PropertySetter PropertyName="f_cardid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_cardid}"/>
+                <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_username}"/>
+                <o:PropertySetter PropertyName="f_address" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_address}"/>
+                <o:PropertySetter PropertyName="f_districtname" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_districtname}"/>
+                <o:PropertySetter PropertyName="f_sgoperator" NoDependValue="{m:Exp Str=kbfee.f_sgoperator}"/>
+                <o:PropertySetter PropertyName="f_deliverydate" NoDependValue="{m:Exp Str=kbfee.f_outfeetime}"/>
+                <o:PropertySetter PropertyName="f_filiale" NoDependValue="{m:Exp Str=kbfee.f_filiale}"/>
+                <o:PropertySetter PropertyName="f_sgnetwork" NoDependValue="{m:Exp Str=kbfee.f_sgnetwork}"/>
+                <o:PropertySetter PropertyName="f_gaspricetype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaspricetype}"/>
+                <o:PropertySetter PropertyName="f_gaswatchbrand" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaswatchbrand}"/>
+                <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_usertype}"/>
+                <o:PropertySetter PropertyName="f_payfeevalid" Default="机表转气"/>
+            </o:GeneralObject>
+
+
+
+
+
+
         </m:ResourceLoad>
         <Grid >
             <Grid.ColumnDefinitions>

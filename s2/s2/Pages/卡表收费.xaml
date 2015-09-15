@@ -33,10 +33,15 @@
             <o:GeneralObject Name="cainuanji" EntityType="t_addons" WebClientInfo="{StaticResource dbclient}"
              	Path="{m:Exp Str=$one/from cainuanji }">
             </o:GeneralObject>
-            <!--历史交费列表-->
-            <o:ObjectList Name="kbsellgas" WebClientInfo="{StaticResource dbclient}"
+            <!--历史交费列表
+              <o:ObjectList Name="kbsellgas" WebClientInfo="{StaticResource dbclient}"
 				Path="{m:Exp Str=kbusers.f_userid !\= null:$from t_sellinggas where f_userid\=\'\{kbfee.f_userid\}\' order by f_deliverydate desc \, id desc $\,null}"
 				IsOld="{m:Exp Str=SaveAction.State\=\=$End$}" />
+            -->
+
+
+
+
             <!--本月有效费列表,目的是计算用户本月已经购买的气量-->
             <o:ObjectList Name="kbbysellgas" WebClientInfo="{StaticResource dbclient}"
 				Path="{m:Exp Str=kbusers.f_userid !\= null:$from t_sellinggas where f_userid\=\'\{kbfee.f_userid\}\' and (f_payfeetype \=\'卡表收费\' or f_payfeetype \=\'发卡售气\') and DateDiff(d\,f_deliverydate\,\'\{SysTime.Today.ToString($yyyy-MM-dd$)\}\') &lt;\=\{xgys.value\}*30 and f_payfeevalid\=\'有效\'$\,null}"
@@ -203,7 +208,7 @@
             <!--核对卡号对象-->
             <oo:NewGeneralICCard Name="checkcardid"   
 		    ></oo:NewGeneralICCard>
-                
+
 
             <!--卡对象-->
             <oo:NewGeneralICCard Name="card"   
@@ -889,11 +894,11 @@
                                 </TextBox>
                                 <TextBlock Text="表上次累计购气量：" Margin="0" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="5" Grid.Column="2" Height="25"/>
                                 <TextBlock Grid.Column="4" Margin="0" Grid.Row="11" TextWrapping="Wrap" TextAlignment="Right" Height="25"><Run Text="交费"/><Run Text="时间"/><Run Text="："/></TextBlock>
-                             <toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="5" Margin="0" Grid.Row="11"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" >
+                                <!--<toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="5" Margin="0" Grid.Row="11"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" >
                                     <a:Data.Prop>
                                         <o:PropertySetter PropertyName="f_deliverytime" Value="{m:Exp Str=SecRefresh\=&gt;TimeEvent!\=null:SysTime.Now\,$$}"/>
                                     </a:Data.Prop>
-                                </toolkit:TimePicker> 
+                                </toolkit:TimePicker>-->
                                 <TextBlock Text="卡内气量：" Margin="0" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="1" Grid.Column="4" Height="25"/>
                                 <TextBox Text="{Binding f_beginfeebj, StringFormat=yyyy-MM-dd}" Grid.Column="2" Margin="18.167,6,0,6" Grid.Row="6" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Left" Width="43"  Visibility="Collapsed" >
                                     <a:Data.Prop>
@@ -968,10 +973,11 @@
                             </Grid>
                         </ScrollViewer>
                     </StackPanel>
-                    <Grid  toolkit:DockPanel.Dock="Bottom">
+                    <Grid  toolkit:DockPanel.Dock="Bottom" Height="322">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="40"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="280"/>
+                            <RowDefinition Height="40"/>
                         </Grid.RowDefinitions>
                         <toolkit:DockPanel  Background="#FFC3E4FD" Margin="0"     >
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" >
@@ -981,34 +987,53 @@
                                 <Button x:Name="ButtonCancel" Content="撤  销" Margin="5" FontSize="12" Click="{m:Exp Str=kbfee1.DataContext.New();kbusers.New();kbsellgas.New();kbbysellgas.New()}" Width="50"/>
                             </StackPanel>
                         </toolkit:DockPanel>
-                        <sdk:DataGrid Grid.Row="1"  AutoGenerateColumns="False" x:Name="kbgaslist" ItemsSource="{m:Exp Str=kbsellgas}" Margin="0" IsReadOnly="True">
-                            <sdk:DataGrid.Columns>
-                                <sdk:DataGridTemplateColumn>
-                                    <sdk:DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate/>
-                                    </sdk:DataGridTemplateColumn.CellTemplate>
-                                </sdk:DataGridTemplateColumn>
+                        <sdk:DataGrid Grid.Row="1"  AutoGenerateColumns="False" x:Name="kbgaslist"  Margin="0,0,0,42" IsReadOnly="True">
+                            <a:Data.Items>
 
+                                <o:PagedList x:Name="kbsellgas" WebClientInfo="{StaticResource dbclient}"
+									LoadOnPathChanged="True" IsOld="{m:Exp Str=SaveAction.State\=\=$End$}"
+									Names="id,f_userid,f_username,f_cardid,f_address,optype,f_gasprice,f_pregas,f_preamount,f_cardfees,f_sgoperator,opdate,f_payfeevalid"
+									SumHQL="{m:Exp Str=$select id\,f_userid\, f_username\,f_cardid\,  f_address\, \'售气\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\, convert(varchar(100)\, f_deliverydate\, 120) as opdate\,f_payfeevalid  from t_sellinggas where  f_payfeevalid\=\'有效\' and f_payfeetype!\=\'超用收费\'  and f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\,f_userid\, f_username\,f_cardid\, f_address\, \'超用\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\, convert(varchar(100)\, f_deliverydate\, 120) as  opdate\,f_payfeevalid   from t_sellinggas where  f_payfeevalid\=\'有效\' and f_payfeetype\=\'超用收费\'  and f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\, f_userid\, f_username\,f_cardid\,  f_address\, \'补卡\' as optype\, null\,null\,null\, f_cardfees  as fees\, f_rcoperator\,convert(varchar(100)\, f_recoverycarddate\, 120) as  opdate\,f_payfeevalid from t_renewalcard  where f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\, f_userid\, f_username\,f_cardid\,  f_address\, \'换表\' as optype\, null\,null\,null\,f_changmeterfee  as fees\, f_cmoperator\, convert(varchar(100)\, f_cmdate\, 120) as  opdate\,f_payfeevalid  from t_changmeter  where f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\,f_userid\, f_username\, f_cardid\, f_address\, \'卡表转气\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\,  convert(varchar(100)\, f_deliverydate\, 120) as  opdate\,f_payfeevalid  from t_sellinggas where f_payfeevalid\=\'卡表转气\' and f_userid\=\'\{kbfee.f_userid\}\'}"
+									
+                HQL="{m:Exp Str=$select id\,f_userid\, f_username\,f_cardid\,  f_address\, \'售气\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\, convert(varchar(100)\, f_deliverydate\, 120) as opdate\,f_payfeevalid  from t_sellinggas where  f_payfeevalid\=\'有效\' and f_payfeetype!\=\'超用收费\'  and f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\,f_userid\, f_username\,f_cardid\, f_address\, \'超用\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\, convert(varchar(100)\, f_deliverydate\, 120) as  opdate\,f_payfeevalid   from t_sellinggas where  f_payfeevalid\=\'有效\' and f_payfeetype\=\'超用收费\'  and f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\, f_userid\, f_username\,f_cardid\,  f_address\, \'补卡\' as optype\, null\,null\,null\, f_cardfees  as fees\, f_rcoperator\,convert(varchar(100)\, f_recoverycarddate\, 120) as  opdate\,f_payfeevalid from t_renewalcard  where f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\, f_userid\, f_username\,f_cardid\,  f_address\, \'换表\' as optype\, null\,null\,null\,f_changmeterfee  as fees\, f_cmoperator\, convert(varchar(100)\, f_cmdate\, 120) as  opdate\,f_payfeevalid  from t_changmeter  where f_userid\=\'\{kbfee.f_userid\}\' 
+union all select id\,f_userid\, f_username\, f_cardid\, f_address\, \'卡表转气\' as optype\, f_gasprice\, f_pregas\, f_preamount\, f_cardfees  as fees\, f_sgoperator\,  convert(varchar(100)\, f_deliverydate\, 120) as  opdate\,f_payfeevalid  from t_sellinggas where f_payfeevalid\=\'卡表转气\' and f_userid\=\'\{kbfee.f_userid\}\'}"
+															Path="sql" PageIndex="{m:Exp Str=pager2.PageIndex}" PageSize="{m:Exp Str=pager2.PageSize}" SumNames="id"/>
+
+                            </a:Data.Items>
+
+
+
+                            <sdk:DataGrid.Columns>
                                 <sdk:DataGridTextColumn Header="序   号" d:IsLocked="True" Binding="{Binding Index}" />
                                 <sdk:DataGridTextColumn Header="用户编号" Binding="{Binding f_userid}"/>
                                 <sdk:DataGridTextColumn Header="用户姓名" Binding="{Binding f_username}"/>
                                 <sdk:DataGridTextColumn Header="卡号" Binding="{Binding f_cardid}"/>
-                                <sdk:DataGridTextColumn Header="交费日期" Binding="{Binding f_deliverydate, StringFormat=yyyy-MM-dd}"/>
-                                <sdk:DataGridTextColumn Header="交费时间" Binding="{Binding f_deliverytime, StringFormat=hh:mm:ss tt}"/>
-                                <sdk:DataGridTextColumn Header="特殊标记" Binding="{Binding remark}"/>
-                                <sdk:DataGridTextColumn Header="购 气 量" Binding="{Binding f_pregas}"/>
-                                <sdk:DataGridTextColumn Header="气    价" Binding="{Binding f_gasprice}"/>
+                                <sdk:DataGridTextColumn Header="地址" Binding="{Binding f_address}"/>
+                                <sdk:DataGridTextColumn Header="所属操作" Binding="{Binding optype}"/>
+                                <sdk:DataGridTextColumn Header="气 价" Binding="{Binding f_gasprice}"/>
+                                <sdk:DataGridTextColumn Header="气 量" Binding="{Binding f_pregas}"/>
                                 <sdk:DataGridTextColumn Header="购气金额" Binding="{Binding f_preamount}"/>
-                                <sdk:DataGridTextColumn Header="网　　点" Binding="{Binding f_sgnetwork}"/>
+                                <sdk:DataGridTextColumn Header="工本费用" Binding="{Binding fess}"/>
                                 <sdk:DataGridTextColumn Header="操 作 员" Binding="{Binding f_sgoperator}"/>
 
-                                <sdk:DataGridTextColumn Header="维护费交费开始年月" Binding="{Binding f_beginfee, StringFormat=yyyy-MM}"/>
-                                <sdk:DataGridTextColumn Header="维护费交费截止年月" Binding="{Binding f_endfee, StringFormat=yyyy-MM}"/>
-                                <sdk:DataGridTextColumn Header="维护费金额" Binding="{Binding f_amountmaintenance}"/>
-                                <sdk:DataGridTextColumn Header="是否有效" Binding="{Binding f_payfeevalid}"/>
-                                <sdk:DataGridTextColumn Header="旧业务类型" Binding="{Binding f_oldtype}"/>
+                                <sdk:DataGridTextColumn Header="操作日期" Binding="{Binding opdate, StringFormat=yyyy-MM-dd}"/>
+                               <sdk:DataGridTextColumn Header="是否有效" Binding="{Binding f_payfeevalid}"/>
                             </sdk:DataGrid.Columns>
                         </sdk:DataGrid>
+                        <toolkit:DockPanel Grid.Row="1"   Background="#FFC3E4FD" toolkit:DockPanel.Dock="Bottom" Margin="0,240,0,38" RenderTransformOrigin="0.5,0.5" Grid.RowSpan="2">
+
+                            <sdk:DataPager x:Name="pager2" Source="{Binding ItemsSource.Count, Converter={StaticResource DataPagerConverter}, ElementName=kbgaslist}" Margin="0,0,0,0" PageSize="42" toolkit:DockPanel.Dock="Top" Height="36" RenderTransformOrigin="0.5,0.5"   >
+
+                            </sdk:DataPager>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"/>
+                        </toolkit:DockPanel>
                     </Grid>
                 </toolkit:DockPanel>
             </c:BusyIndicatorEx>

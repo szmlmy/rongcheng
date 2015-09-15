@@ -371,7 +371,7 @@
 			</Grid>			
 			<sdk:TabControl Margin="0,0,0,30">
 				
-				<sdk:TabItem Header="   售    气   ">
+				<sdk:TabItem Header="   售气和转费   ">
 					<toolkit:DockPanel>
 						<toolkit:DockPanel toolkit:DockPanel.Dock="Bottom">
 							<Grid>

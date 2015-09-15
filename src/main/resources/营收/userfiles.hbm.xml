@@ -395,6 +395,11 @@
 		<property name="f_bankname" type="string"/>
 		<!--银行开户账号-->
 		<property name="f_idofcard" type="string"/>
+			<!--缴费编号-->
+		<property name="f_jfbh" type="string"/>
+			<!--协议编号-->
+		<property name="f_xybh" type="string"/>
+		
 		<!--旧系统档案记录ID-->
 		<property name="f_uuid" type="string"/>
 		<!-- ***************阶梯气价*************** -->
@@ -424,6 +429,10 @@
 		<!-- ***************押金*************** -->
 		<!--押金-->
 		<property name="f_yajin" type="string"/>
+		
+		<property name="f_jbzyqje" type="double"/>
+		<!--旧系统用气地址-->
+		<property name="f_oldaddress" type="string"/>
 		
 </class>
 </hibernate-mapping>

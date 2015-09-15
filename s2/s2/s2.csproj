@@ -139,6 +139,9 @@
     <Compile Include="Pages\卡表转气.xaml.cs">
       <DependentUpon>卡表转气.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Pages\多次未安检用户排查明细.xaml.cs">
+      <DependentUpon>多次未安检用户排查明细.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Pages\报表\营业年统计报表.xaml.cs">
       <DependentUpon>营业年统计报表.xaml</DependentUpon>
     </Compile>
@@ -163,6 +166,9 @@
     </Compile>
     <Compile Include="Pages\退押金查询.xaml.cs">
       <DependentUpon>退押金查询.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\隐患查询.xaml.cs">
+      <DependentUpon>隐患查询.xaml</DependentUpon>
     </Compile>
     <Compile Include="Pages\非民用建档发卡.xaml.cs">
       <DependentUpon>非民用建档发卡.xaml</DependentUpon>
@@ -1511,6 +1517,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Pages\多次未安检用户排查明细.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Pages\报表\营业年统计报表.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -1540,6 +1550,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Pages\退押金查询.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Pages\隐患查询.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

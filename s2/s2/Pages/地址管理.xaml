@@ -29,49 +29,52 @@
                     <Button Name="btnDown" Width="40" Height="30" Click="btnDown_Click" HorizontalAlignment="Left">下移</Button>
                     <Button Name="btnDel" Width="40" Height="30" Click="btnDel_Click" HorizontalAlignment="Left">删除</Button>
                     <Button Name="btnSync" Width="120" Height="30" Click="btnSync_Click" HorizontalAlignment="Left" Margin="30,0,0,0">导入地址生成地址</Button>
+                    <TextBlock Text="小区名称：" Margin="0,17,0,15" />
+                    <TextBox Name="xq"  Margin="0,17,0,15" > </TextBox>
+                    <Button Name="btnSearch" Width="47" Height="30" Click="btnSearch_Click" HorizontalAlignment="Left" Margin="30,14,0,13">查询</Button>
                 </StackPanel>
                 <sdk:TreeView Width="400" Name="tree" SelectedItemChanged="TreeView_SelectedItemChanged">
                     <sdk:TreeViewItem Header="地址管理" Name="root">
                     </sdk:TreeViewItem>
                 </sdk:TreeView>
                 <StackPanel toolkit:DockPanel.Dock="Right">
-                <Grid Margin="0,0,3,0" HorizontalAlignment="Stretch" Height="Auto" Width="Auto" Name="AreaGrid" DataContext="{m:Exp Str=GridAreaContext}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="30"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="85"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="200"/>
-                    </Grid.ColumnDefinitions>
-                    <TextBlock Text="街    道：" Margin="0,3,-1,2" TextWrapping="Wrap" Grid.Column="0" Grid.Row="0" TextAlignment="Right" Height="25" FontSize="13.333"/>
-                    <TextBox Text="{m:Bind Path=f_road}" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2"  Grid.Row="0" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="25" Width="200" FontSize="13.333" >
-                    </TextBox>
-                    <TextBlock Text="小区名称：" Margin="0,3,-1,2" TextWrapping="Wrap"  Grid.Row="1" Grid.Column="0" TextAlignment="Right" Height="25" FontSize="13.333"/>
-                    <TextBox Text="{m:Bind Path=f_districtname}" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2"  Grid.Row="1" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="25" FontSize="13.333" >
-                    </TextBox>
-                    <TextBlock Text="小区地址：" Margin="1,5,-2,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="2" Height="25" FontSize="13.333" />
-                    <TextBox Text="{m:Bind Path=f_address}" MinWidth="4" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2" Grid.Row="2" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" FontSize="13.333"  d:LayoutOverrides="GridBox" >
-                    </TextBox>
-                    <TextBlock Text="联系方式：" Margin="0,3,0,2" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="3" Height="25" FontSize="13.333" />
-                    <TextBox Text="{m:Bind Path=f_phone}" MinWidth="4" IsReadOnly="True" Grid.Column="1" Margin="0" Grid.Row="3" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="25" FontSize="13.333" Grid.ColumnSpan="1" Grid.RowSpan="1" >
-                    </TextBox>
-                    <TextBlock Text="操  作  员：" Margin="0,5,-1,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="4" Height="25" FontSize="13.333" />
-                    <TextBox Text="{m:Bind Path=f_operator}" Grid.Column="1" Margin="0,3,0,2" Grid.Row="4" TextWrapping="Wrap" IsReadOnly="True" Height="25" HorizontalAlignment="Stretch" FontSize="13.333" VerticalAlignment="Stretch">
-                    </TextBox>
-                    <!--分公司-->
-                    <TextBlock Text="操作日期：" Margin="-1,5,0,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="5" Height="25" FontSize="13.333" />
-                    <sdk:DatePicker Grid.Column="1" Margin="0,2,0,3" Grid.Row="5"  SelectedDate="{m:Bind Path=f_date}" IsEnabled="False" Height="25" HorizontalAlignment="Stretch" FontSize="13.333" VerticalAlignment="Stretch" Grid.RowSpan="1">
-                    </sdk:DatePicker>
-                </Grid>
+                    <Grid Margin="0,0,3,0" HorizontalAlignment="Stretch" Height="Auto" Width="Auto" Name="AreaGrid" DataContext="{m:Exp Str=GridAreaContext}">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="30"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="85"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="街    道：" Margin="0,3,-1,2" TextWrapping="Wrap" Grid.Column="0" Grid.Row="0" TextAlignment="Right" Height="25" FontSize="13.333"/>
+                        <TextBox Text="{m:Bind Path=f_road}" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2"  Grid.Row="0" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="25" Width="200" FontSize="13.333" >
+                        </TextBox>
+                        <TextBlock Text="小区名称：" Margin="0,3,-1,2" TextWrapping="Wrap"  Grid.Row="1" Grid.Column="0" TextAlignment="Right" Height="25" FontSize="13.333"/>
+                        <TextBox Text="{m:Bind Path=f_districtname}" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2"  Grid.Row="1" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="25" FontSize="13.333" >
+                        </TextBox>
+                        <TextBlock Text="小区地址：" Margin="1,5,-2,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="2" Height="25" FontSize="13.333" />
+                        <TextBox Text="{m:Bind Path=f_address}" MinWidth="4" IsReadOnly="True" Grid.Column="1" Margin="0,3,0,2" Grid.Row="2" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Height="Auto" FontSize="13.333"  d:LayoutOverrides="GridBox" >
+                        </TextBox>
+                        <TextBlock Text="联系方式：" Margin="0,3,0,2" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="3" Height="25" FontSize="13.333" />
+                        <TextBox Text="{m:Bind Path=f_phone}" MinWidth="4" IsReadOnly="True" Grid.Column="1" Margin="0" Grid.Row="3" TextWrapping="Wrap"  HorizontalAlignment="Stretch" VerticalAlignment="Top" Height="25" FontSize="13.333" Grid.ColumnSpan="1" Grid.RowSpan="1" >
+                        </TextBox>
+                        <TextBlock Text="操  作  员：" Margin="0,5,-1,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="4" Height="25" FontSize="13.333" />
+                        <TextBox Text="{m:Bind Path=f_operator}" Grid.Column="1" Margin="0,3,0,2" Grid.Row="4" TextWrapping="Wrap" IsReadOnly="True" Height="25" HorizontalAlignment="Stretch" FontSize="13.333" VerticalAlignment="Stretch">
+                        </TextBox>
+                        <!--分公司-->
+                        <TextBlock Text="操作日期：" Margin="-1,5,0,0" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="0" Grid.Row="5" Height="25" FontSize="13.333" />
+                        <sdk:DatePicker Grid.Column="1" Margin="0,2,0,3" Grid.Row="5"  SelectedDate="{m:Bind Path=f_date}" IsEnabled="False" Height="25" HorizontalAlignment="Stretch" FontSize="13.333" VerticalAlignment="Stretch" Grid.RowSpan="1">
+                        </sdk:DatePicker>
+                    </Grid>
                     <Grid Margin="0,0,3,0" HorizontalAlignment="Stretch" Height="Auto" Width="Auto" Name="EditGrid" DataContext="{m:Exp Str=EditItem}">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30"/>

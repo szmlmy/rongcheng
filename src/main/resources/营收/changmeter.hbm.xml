@@ -250,7 +250,8 @@
             <!-- 卡密码-->
          <property name="kmm" type="string"/>
 		
-		
+		<!--换表人-->
+		<property name="f_huanbiaoren" type="string"/>
 		<!--换表补气记录 --> 
 	    <set name="f_buqi" cascade="all-delete-orphan">
           <key column="parentid" on-delete="noaction" /> 

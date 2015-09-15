@@ -35,13 +35,13 @@ namespace s2.Pages
             }
             String dt2 = "1=1";
             if (StartDate.Text.Trim().Length != 0)
-                dt2 = " SAVE_DATE>='" + StartDate.Text + "'";
+                dt2 = " DEPARTURE_TIME>='" + StartDate.Text + "'";
             if (EndDate.Text.Trim().Length != 0)
             {
                 if (dt2.Length > 3)
-                    dt2 += " and SAVE_DATE<='" + EndDate.Text + " 23:59:59'";
+                    dt2 += " and DEPARTURE_TIME<='" + EndDate.Text + " 23:59:59'";
                 else
-                    dt2 = " SAVE_DATE<='" + EndDate.Text + " 23:59:59'";
+                    dt2 = " DEPARTURE_TIME<='" + EndDate.Text + " 23:59:59'";
             }
             checkerList.Path = "sql";
             checkerList.Names = "jiancha,ruhu,wuren,jujian,louqi,biao,tongzhishu";

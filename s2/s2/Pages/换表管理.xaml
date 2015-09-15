@@ -257,6 +257,7 @@
                         <TextBlock Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="总累计购气量：" Height="25" TextAlignment="Right"/>
                         <TextBlock Grid.Column="2" Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="表累计购气量：" Height="25" TextAlignment="Right"/>
                         <TextBlock Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="旧表底数：" Grid.Column="4" Height="25" TextAlignment="Right"/>
+                        <TextBlock Margin="0" Grid.Row="8" TextWrapping="Wrap" Text="换表人：" Grid.Column="4" Height="25" TextAlignment="Right"/>
                         <TextBlock Margin="0" Grid.Row="8" TextWrapping="Wrap" Text="表　　费：" Height="25" TextAlignment="Right"/>
                         <TextBlock Margin="0" Grid.Row="9" TextWrapping="Wrap" Text="卡　　费：" Height="25" TextAlignment="Right"/>
                         <TextBlock Margin="0" Grid.Row="9" TextWrapping="Wrap" Text="新气表品牌：" Grid.Column="2" Height="25" TextAlignment="Right"/>
@@ -370,7 +371,11 @@
                                 <o:PropertySetter PropertyName="f_oldcurrentbase" NotNull="True"/>
                             </a:Data.Prop>
                         </TextBox>
-
+                        <TextBox Text="{m:Bind Path=f_huanbiaoren}" Grid.Column="5" Margin="0" Grid.Row="8" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="25">
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_huanbiaoren" />
+                            </a:Data.Prop>
+                        </TextBox>
                         <TextBox Text="{m:Bind Path=f_payfeevalid}" Visibility="Collapsed" Grid.Column="1" Margin="0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="25" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_payfeevalid" 

@@ -67,11 +67,57 @@
                 <b:BatchInfo Source="{m:Exp Str=UpdateUserFileOut}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=UpdateUserFileKB}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=kbfee}" MethodName="SaveToJson"/>
-
+                <b:BatchInfo Source="{m:Exp Str=into}" MethodName="SaveToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=out}" MethodName="SaveToJson"/>
             </b:BatchExcuteAction>
 
 
-            <!--卡对象-->
+
+
+            <o:GeneralObject Name="into" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}" >
+
+                <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_userid}"/>
+                <o:PropertySetter PropertyName="f_pregas" NoDependValue="{m:Exp Str=kbfee.f_outgasno}"/>
+                <o:PropertySetter PropertyName="f_preamount" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_grossproceeds" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_gasprice" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_gasprice}"/>
+                <o:PropertySetter PropertyName="f_cardid" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_cardid}"/>
+                <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_username}"/>
+                <o:PropertySetter PropertyName="f_address" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_address}"/>
+                <o:PropertySetter PropertyName="f_districtname" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_districtname}"/>
+                <o:PropertySetter PropertyName="f_sgoperator" NoDependValue="{m:Exp Str=kbfee.f_sgoperator}"/>
+                <o:PropertySetter PropertyName="f_deliverydate" NoDependValue="{m:Exp Str=kbfee.f_outfeetime}"/>
+                <o:PropertySetter PropertyName="f_filiale" NoDependValue="{m:Exp Str=kbfee.f_filiale}"/>
+                <o:PropertySetter PropertyName="f_sgnetwork" NoDependValue="{m:Exp Str=kbfee.f_sgnetwork}"/>
+                <o:PropertySetter PropertyName="f_gaspricetype" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_gaspricetype}"/>
+                <o:PropertySetter PropertyName="f_gaswatchbrand" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_gaswatchbrand}"/>
+                <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=inkbusers.SelectedItem.f_usertype}"/>
+                <o:PropertySetter PropertyName="f_payfeevalid" Default="卡表转气"/>
+            </o:GeneralObject>
+
+            <o:GeneralObject Name="out" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}" >
+
+                <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_userid}"/>
+                <o:PropertySetter PropertyName="f_pregas" NoDependValue="{m:Exp Str=-kbfee.f_outgasno}"/>
+                <o:PropertySetter PropertyName="f_preamount" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_grossproceeds" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_gasprice" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gasprice}"/>
+                <o:PropertySetter PropertyName="f_cardid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_cardid}"/>
+                <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_username}"/>
+                <o:PropertySetter PropertyName="f_address" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_address}"/>
+                <o:PropertySetter PropertyName="f_districtname" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_districtname}"/>
+                <o:PropertySetter PropertyName="f_sgoperator" NoDependValue="{m:Exp Str=kbfee.f_sgoperator}"/>
+                <o:PropertySetter PropertyName="f_deliverydate" NoDependValue="{m:Exp Str=kbfee.f_outfeetime}"/>
+                <o:PropertySetter PropertyName="f_filiale" NoDependValue="{m:Exp Str=kbfee.f_filiale}"/>
+                <o:PropertySetter PropertyName="f_sgnetwork" NoDependValue="{m:Exp Str=kbfee.f_sgnetwork}"/>
+                <o:PropertySetter PropertyName="f_gaspricetype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaspricetype}"/>
+                <o:PropertySetter PropertyName="f_gaswatchbrand" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaswatchbrand}"/>
+                <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_usertype}"/>
+                <o:PropertySetter PropertyName="f_payfeevalid" Default="卡表转气"/>
+            </o:GeneralObject>
+
+
+            <!--卡对象--> 
             <oo:NewGeneralICCard Name="card"   
           CanSellGas="{m:Exp Str='SaveAction.State=>Completed==$End$ and kbfee1.DataContext.f_writecardtype!=$初始化卡$' }"
 		 CanRewriteCard="{m:Exp Str='SaveAction.State=>Completed==$End$ and kbfee1.DataContext.f_writecardtype==$初始化卡$'}"
@@ -95,16 +141,6 @@
 		 Sxrq="{m:Exp Str='SysTime.Now.ToString($yyyyMMdd$)'}"
 		>
             </oo:NewGeneralICCard>
-
-
-
-
-
-
-
-
-
-
 
         </m:ResourceLoad>
         <Grid >

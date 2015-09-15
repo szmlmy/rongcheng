@@ -385,6 +385,8 @@
 		<property name="f_alarm_expire_time" type="string"/>
 		<!-- 生产时间-->
 		 <property name="f_meter_manufacture_date" type="string"/>
+		 <!-- 到期时间-->
+		 <property name="f_meter_manufacfalse_date" type="string"/>
 		<!-- 燃气表表型 G2.5 G4 G6 -->
 		 <property name="f_meter_type" type="string"/>
 		<!-- IC卡类型  普通、远传、射频-->
@@ -576,6 +578,7 @@
 		
 	 	<!--  整改单单号-->
 		<property name="f_renow_id" type="string"/>
+		
         
 <!--  -->
         <!-- 安检单类型-->
@@ -588,5 +591,32 @@
           <key column="INSPECTION_ID" on-delete="noaction"/>
           <one-to-many entity-name="T_INSPECTION_LINE" not-found="exception"/>  
         </set>		
+        
+        
+        
+        
+        
+        
+		<!-- 热辐射-->
+		<property name="f_heat_radiation" type="boolean"/>
+        <!-- 表安装位置 -->
+		<property name="f_TIE" type="string"/>
+        <!-- 地下室是否有立杠-->
+		<property name="f_dxssfylg" type="boolean"/>
+        <!-- 软管超期-->
+		<property name="f_rgcq" type="boolean"/>
+        <!-- 软管有接口-->
+		<property name="f_rgyjk" type="boolean"/>
+        
+        
+        
+        
+        
+        
+        
+        <!-- 胶皮管更换时间 -->
+		<property name="f_jpg_time" type="string"/>
+		<!-- 胶皮管到期时间 -->
+		<property name="f_jpg_expire_time" type="string"/>
 	</class>
 </hibernate-mapping>

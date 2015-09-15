@@ -121,7 +121,6 @@ public class HandCharge {
 
 	// 单块表抄表录入
 	// 本方法不可重入
-	@SuppressWarnings("unchecked")
 	@GET
 	@Path("record/one/{userid}/{reading}/{sgnetwork}/{sgoperator}/{lastinputdate}/{handdate}/{meterstate}")
 	@Produces("application/json")
@@ -134,11 +133,11 @@ public class HandCharge {
 			@PathParam("meterstate") String meterstate) {
 		String ret = "";
 		try {
-			return afrecordInput(userid, reading, sgnetwork, sgoperator,
+			ret = afrecordInput(userid, reading, sgnetwork, sgoperator,
 					lastinputdate, handdate, 0, meterstate);
 		} catch (Exception e) {
 			log.debug(e.getMessage());
-			ret = e.getMessage();
+			ret = "";
 		} finally {
 			return ret;
 		}

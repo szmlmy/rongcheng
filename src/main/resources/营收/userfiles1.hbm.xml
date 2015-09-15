@@ -11,7 +11,7 @@
 		<!--发票号， -->
 		<property name="f_invoicenum" type="string"/>
 		<!--旧用户编号-->
-		<property name="oldid" type="bigint"/>
+		<property name="oldid" type="int"/>
 		<!--旧系统用户编号-->
 		<property name="old" type="string"/>
 		<!--韶关表具旧系统表具id-->
@@ -369,6 +369,9 @@
 		<property name="f_idofcard" type="string"/>
 		<!--旧系统档案记录ID-->
 		<property name="f_uuid" type="string"/>
-		
+		<!--机表总用气金额-->
+		<property name="f_jbzyqje" type="double"/>
+		<!--旧系统用气地址-->
+		<property name="f_oldaddress" type="string"/>
 </class>
 </hibernate-mapping>
