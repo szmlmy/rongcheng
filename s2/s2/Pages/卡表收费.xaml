@@ -884,9 +884,11 @@
                                 </TextBox>
                                 <TextBox Text="{m:Bind Path=f_gas}" Grid.Column="5" Margin="0" Grid.Row="1" TextWrapping="Wrap"  HorizontalAlignment="Stretch" Height="25" VerticalAlignment="Stretch" Width="Auto" IsReadOnly="True" >
                                     <a:Data.Prop>
-                                        <o:PropertySetter PropertyName="f_gas" NoDependValue="{m:Exp Str=card.Gas\=>ReadCompleted}"  />
+                                        <o:PropertySetter PropertyName="f_gas" NoDependValue="{m:Exp Str=card.Gas\=>ReadCompleted}"  Validation="{m:Exp Str=value ^\= 0}"  ErrorMessage="卡内有气量，不能进行购气！" />
                                     </a:Data.Prop>
                                 </TextBox>
+
+          
                                 <TextBox Text="{m:Bind Path=f_userstate}" Grid.Column="5" Margin="0" Grid.Row="0" TextWrapping="Wrap"  HorizontalAlignment="Right" Height="25" VerticalAlignment="Stretch" Width="Auto" IsReadOnly="True" >
                                     <a:Data.Prop>
                                         <o:PropertySetter PropertyName="f_userstate" Value="{m:Exp Str=kbusers.f_userstate}" Validation="{m:Exp Str=value\=\=$正常$}"  ErrorMessage="已停用或销户不能购气！"/>

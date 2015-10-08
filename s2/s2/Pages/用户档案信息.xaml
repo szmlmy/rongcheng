@@ -199,12 +199,14 @@
                                 <o:PropertySetter PropertyName="f_userstate"  Operator="f_userstate = 'this'"/>
                             </a:Data.Prop>
                         </ComboBox>
-                        <TextBlock TextWrapping="Wrap" Text="余额&gt;：" Grid.Column="4"  Margin="0,2,0,1" Height="25" TextAlignment="Right" Grid.Row="3" />
+                        <TextBlock TextWrapping="Wrap" Text="余额&lt;：" Grid.Column="4"  Margin="0,2,0,1" Height="25" TextAlignment="Right" Grid.Row="3" />
                         <TextBox x:Name="xg" TextWrapping="Wrap" Grid.Column="5" Grid.Row="3" Text="{m:Bind Path=f_zhye}" Width="Auto" Margin="0,2,0,1" Height="25" HorizontalAlignment="Stretch" Grid.ColumnSpan="1" VerticalAlignment="Stretch" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_zhye"  Operator="f_zhye &gt; this"/>
+                                <o:PropertySetter PropertyName="f_zhye"  Operator="f_zhye &lt; this"/>
                             </a:Data.Prop>
                         </TextBox>
+                      
+
                         <TextBlock TextWrapping="Wrap" Text="交费方式：" Grid.Column="6"  Margin="0" Height="25" TextAlignment="Right" />
                         <ComboBox x:Name="tjwangdian"  SelectedValue="{m:Bind Path=f_payment}" Grid.Row="0" Grid.Column="7" ItemsSource="{m:Exp Str=paymentlistnull}"  Margin="0"  SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto">
                             <ComboBox.ItemTemplate>
