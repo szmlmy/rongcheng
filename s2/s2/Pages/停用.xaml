@@ -291,7 +291,7 @@
             					Default="{m:Exp Str=SysTime.Now}"/>
             			</a:Data.Prop>
             		</sdk:DatePicker>	
-            		<Button Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="23,0,37,5" Width="50"/>
+            		<Button Visibility="Collapsed" Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="23,0,37,5" Width="50"/>
             		<!--隐藏域-->
 						<!--卡号-->
 						<TextBox Text="{m:Bind Path=f_cardid}" Visibility="Collapsed" Margin="0,6"  TextWrapping="Wrap" VerticalAlignment="Center" IsReadOnly="True">

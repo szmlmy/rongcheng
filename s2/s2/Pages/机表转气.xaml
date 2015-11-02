@@ -29,21 +29,24 @@
 		  	Path="one/from t_singlevalue where name='发票格式'"   ></o:GeneralObject>
 
 
-
-            <b:HQLAction Name="UpdateUserFileOut" Type="sql"
-			HQL="{m:Exp Str=$update t_userfiles set  f_zhye\=\{kbfee.f_yhju- kbfee.f_outmoney\} where f_userid \= \'\{kbfee1.DataContext.f_userid\}\'}"
+            <b:HQLAction Name="UpdateUserFileOut" Type="sql" 
+			HQL="{m:Exp Str=$update t_userfiles set  f_zhye\=\{kbfee.f_yhju- kbfee.f_outmoney\}\,f_jbzyqje\=\{pipelines.SelectedItem.f_jbzyqje- kbfee.f_outmoney\} where f_userid \= \'\{kbfee1.DataContext.f_userid\}\'}"
 		    />
             <!--  
             <b:HQLAction Name="UpdateUserFileKB" Type="sql"
 			HQL="{m:Exp Str=$update t_userfiles set  f_cumulativepurchase\=\{kbfee.f_newsumgasno\}\,f_metergasnums\=\{kbfee.f_newsumgasno\} where f_userid \= \'\{kbfee1.DataContext.f_inid\}\'}"
 		    />-->
 
-            <b:HQLAction Name="UpdateUserFile" Type="sql"
-			HQL="{m:Exp Str=$update t_userfiles set  f_zhye\=\{kbfee.f_newmoney\} where f_userid \= \'\{kbfee1.DataContext.f_inid\}\'}"
+          
+            <b:HQLAction Name="UpdateUserFileinto" Type="sql"
+			HQL="{m:Exp Str=$update t_userfiles set  f_zhye\=\{kbfee.f_newmoney\}\,f_jbzyqje\=\{(pipelines1.SelectedItem.f_jbzyqje+ kbfee.f_outmoney)\}\ where f_userid \= \'\{pipelines1.SelectedItem.f_userid\}\'}"
 		    />
-
+            
+            <b:HQLAction Name="UpdateUserFileOutkabiao" Type="sql"
+			HQL="{m:Exp Str=$update t_userfiles set  f_cumulativepurchase\=\{kbfee.f_allgasnum-(kbfee.f_allgasnum-kbfee.f_watchreading)\}\,f_metergasnums\=\{kbfee.f_allgasnum-(kbfee.f_allgasnum-kbfee.f_watchreading)\}\,f_zhye\=0 where f_userid \= \'\{kbfee1.DataContext.f_userid\}\'}"
+		    />
             <o:GeneralObject Name="kbfee" EntityType="t_switchmoney" WebClientInfo="{StaticResource dbclient}"
-            IsInit="{m:Exp Str=SaveAction\=\=$Error$}">
+            IsInit="{m:Exp Str=SaveAction1.State\=\=$End$ |or| SaveAction.State\=\=$End$}">
                 <!--用户性质-->
                 <o:PropertySetter PropertyName="f_yhxz" NoDependValue="{m:Exp Str=SaveAction\=>Saving!\=null:pipelines.SelectedItem.f_yhxz\,null}"  />
 
@@ -57,16 +60,44 @@
 
             </b:BatchExcuteAction>-->
             <b:BatchExcuteAction Name="SaveAction"  WebClientInfo="{StaticResource dbclient}">
+                <b:BatchInfo Source="{m:Exp Str=UpdateUserFileinto}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=UpdateUserFileOut}" MethodName="InvokeToJson"/>
-                <b:BatchInfo Source="{m:Exp Str=UpdateUserFile}" MethodName="InvokeToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=kbfee}" MethodName="SaveToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=into}" MethodName="SaveToJson"/>
                 <b:BatchInfo Source="{m:Exp Str=out}" MethodName="SaveToJson"/>
             </b:BatchExcuteAction>
+            <b:BatchExcuteAction Name="SaveAction1"  WebClientInfo="{StaticResource dbclient}" >
+                <b:BatchInfo Source="{m:Exp Str=UpdateUserFileinto}" MethodName="InvokeToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=UpdateUserFileOutkabiao}" MethodName="InvokeToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=kbfee}" MethodName="SaveToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=into}" MethodName="SaveToJson"/>
+                <b:BatchInfo Source="{m:Exp Str=kabiaoout}" MethodName="SaveToJson"/>
+            </b:BatchExcuteAction>
+            <!--卡表转出的记录-->
+            <o:GeneralObject Name="kabiaoout" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}"  IsInit="{m:Exp Str=SaveAction1\=\=$Error$}">
+
+                <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_userid}"/>
+                <o:PropertySetter PropertyName="f_pregas" NoDependValue="{m:Exp Str=-kbfee.f_outgasno}"/>
+                <o:PropertySetter PropertyName="f_preamount" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_grossproceeds" NoDependValue="0"/>
+                <o:PropertySetter PropertyName="f_gasprice" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gasprice}"/>
+                <o:PropertySetter PropertyName="f_cardid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_cardid}"/>
+                <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_username}"/>
+                <o:PropertySetter PropertyName="f_address" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_address}"/>
+                <o:PropertySetter PropertyName="f_districtname" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_districtname}"/>
+                <o:PropertySetter PropertyName="f_sgoperator" NoDependValue="{m:Exp Str=kbfee.f_sgoperator}"/>
+                <o:PropertySetter PropertyName="f_deliverydate" NoDependValue="{m:Exp Str=kbfee.f_outfeetime}"/>
+                <o:PropertySetter PropertyName="f_filiale" NoDependValue="{m:Exp Str=kbfee.f_filiale}"/>
+                <o:PropertySetter PropertyName="f_sgnetwork" NoDependValue="{m:Exp Str=kbfee.f_sgnetwork}"/>
+                <o:PropertySetter PropertyName="f_gaspricetype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaspricetype}"/>
+                <o:PropertySetter PropertyName="f_gaswatchbrand" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gaswatchbrand}"/>
+                <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_usertype}"/>
+                <o:PropertySetter PropertyName="f_payfeevalid" Default="卡表转气"/>
+            </o:GeneralObject>
 
 
 
-
+            <!--机表转入的记录-->
             <o:GeneralObject Name="into" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}"   IsInit="{m:Exp Str=SaveAction\=\=$Error$}">
 
                 <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_userid}"/>
@@ -85,7 +116,7 @@
                 <o:PropertySetter PropertyName="f_usertype" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_usertype}"/>
                 <o:PropertySetter PropertyName="f_payfeevalid" Default="机表转气"/>
             </o:GeneralObject>
-
+            <!--机表转出的记录-->
             <o:GeneralObject Name="out" EntityType="t_sellinggas" WebClientInfo="{StaticResource dbclient}"   IsInit="{m:Exp Str=SaveAction\=\=$Error$}">
                 <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_userid}"/>
                 <o:PropertySetter PropertyName="f_preamount" NoDependValue="{m:Exp Str=-kbfee.f_outmoney}"/>
@@ -170,9 +201,10 @@
                     </toolkit:DockPanel>
                     <sdk:DataGrid x:Name="pipelines" Margin="0,0,0,28"  AutoGenerateColumns="False"  IsReadOnly="True">
                         <a:Data.Items>
+                            <!-- and f_gasmeterstyle\=\'机表\' and f_zhye \>0-->
                             <o:PagedObjectList x:Name="pipelineslist" WebClientInfo="{StaticResource dbclient}"
-        					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\}  and f_gasmeterstyle\=\'机表\' and f_zhye \>0}"
-        					IsOld="{m:Exp Str=SaveAction.State\=\=$End$}"
+        					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\} }"
+        					IsOld="{m:Exp Str=SaveAction1.State\=\=$End$ |or| SaveAction.State\=\=$End$}"
         					PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames=","/>
                         </a:Data.Items>
 
@@ -241,7 +273,7 @@
                         <a:Data.Items>
                             <o:PagedObjectList x:Name="pipelineslist1" WebClientInfo="{StaticResource dbclient}"
         					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch1.DataContext.Condition\} and f_gasmeterstyle\=\'机表\'}"
-        					IsOld="{m:Exp Str=SaveAction.State\=\=$End$}"
+        					IsOld="{m:Exp Str=SaveAction1.State\=\=$End$ |or| SaveAction.State\=\=$End$}"
         					PageIndex="{m:Exp Str=pager1.PageIndex}" PageSize="{m:Exp Str=pager1.PageSize}" SumNames=","/>
                         </a:Data.Items>
 
@@ -263,10 +295,14 @@
 
                     <StackPanel HorizontalAlignment="Right"  VerticalAlignment="Bottom" Orientation="Horizontal" Margin="0" >
 
-                        <Button x:Name="save" Content="保  存" Margin="5" 
-										 
-								IsEnabled="{m:Exp Str=kbfee1.DataContext.f_outmoney \>0 and !kbfee.HasErrors}"
+                        <Button x:Name="save" Content="保存机表" Margin="5" 			 
+								IsEnabled="{m:Exp Str=kbfee1.DataContext.f_gasmeterstyle\=\=$机表$ and !kbfee.HasErrors}"
                                 Click="{m:Exp Str=SaveAction.Invoke();kbfee1.DataContext.New()}"
+									  Width="65" />
+                        <Button x:Name="save1" Content="保存卡表" Margin="5" 
+										 
+								IsEnabled="{m:Exp Str=kbfee1.DataContext.f_gasmeterstyle\=\=$卡表$ and !kbfee.HasErrors}"
+                                Click="{m:Exp Str=SaveAction1.Invoke();kbfee1.DataContext.New()}"
 									  Width="65" />
                         <Button Content="撤  销" Margin="5" FontSize="12" Click="{m:Exp Str=kbfee1.DataContext.New()}" Width="50"/>
 
@@ -309,18 +345,52 @@
                         <TextBlock Text="转出用户/单位名称：" Margin="0,9,0,3" TextWrapping="Wrap"  TextAlignment="Right" Grid.Column="2" Height="25"/>
                         <TextBlock Text="转出原因：" Margin="1,5,145,0" Grid.Row="12" TextWrapping="Wrap" TextAlignment="Right" Grid.ColumnSpan="2"/>
                         <TextBlock Text="转气手续费：" Margin="144,2,3,3" Grid.Row="13" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="1" Grid.ColumnSpan="2"/>
-                        <TextBlock Text="转费日期：" Margin="0,6" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Right" Grid.Column="4" Height="25"/>
+                        <TextBlock Text="转费日期：" Margin="0,2,0,3" Grid.Row="3" TextWrapping="Wrap" TextAlignment="Right" Height="25"/>
                         <TextBlock Text="气    价："  TextWrapping="Wrap" TextAlignment="Right" Grid.Row="2" Margin="11,4,1,1" Height="25"/>
                         <TextBlock Text="经办人：" Margin="13,2,1,3" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="13" Height="25"/>
-                        <TextBlock Text="转出金额：" Margin="147,7,3,28" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="2" Height="25" Grid.Column="3" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
 
-                        <TextBlock Text="用户结余：" Margin="11,6,1,29" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="2" Grid.Column="2" Height="25" Grid.RowSpan="2"/>
-                        <TextBox Text="{m:Bind Path=f_yhju}" FontWeight="Bold" Foreground="Red" IsReadOnly="True" Grid.Column="2" Margin="139,6,1,1" Grid.Row="2" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="2" >
+                        <TextBlock Text="用户结余：" Margin="13,6,149,29" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="1" Grid.Column="2" Height="25" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_yhju}" FontWeight="Bold" Foreground="Red" IsReadOnly="True" Grid.Column="3" Margin="1,6,139,1" Grid.Row="1" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="2" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_yhju"
+                                <o:PropertySetter PropertyName="f_yhju" Default="0"
 									NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_zhye}"	/>
                             </a:Data.Prop>
                         </TextBox>
+                        <TextBlock Text="转出金额：" Margin="1,7,149,28" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="2" Height="25" Grid.Column="2" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                        <TextBlock Text="地址：" Margin="13,7,149,28" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="4" Height="25" Grid.RowSpan="2" Grid.ColumnSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_address}" FontWeight="Bold" Foreground="Red" IsReadOnly="True" Grid.Column="1" Margin="1,7,148,0" Grid.Row="4" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="3" >
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_address"
+									NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_address}"	/>
+                            </a:Data.Prop>
+                        </TextBox>
+
+
+                        <TextBlock Text="累计购气量：" Margin="0,8,2,27" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Right" Height="25" Grid.Column="4" Grid.RowSpan="2"/>
+
+                        <TextBox Text="{m:Bind Path=f_allgasnum}" Grid.Column="5" Margin="0,4,2,1" Grid.Row="1" TextWrapping="Wrap" IsReadOnly="True" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="1" >
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_allgasnum"  NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_metergasnums}"/>
+                            </a:Data.Prop>
+                        </TextBox>
+                        <TextBlock Text="当前用气指数："  TextWrapping="Wrap" TextAlignment="Right" Grid.Row="2" Margin="0,8,148,27" Height="25" Grid.Column="4" HorizontalAlignment="Right" Width="118" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_watchreading}" IsReadOnly="{m:Exp Str=pipelines.SelectedItem.f_gasmeterstyle\=\=$机表$\:$True$\,$False$}"  Grid.Column="5" Margin="0,6,0,0" Grid.Row="2" HorizontalAlignment="Stretch" Width="Auto" Height="Auto"  VerticalAlignment="Stretch" >
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_watchreading" NotNull="True" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_metergasnums}"
+                                                  ValidationVal="{m:Exp Str= kbfee.f_watchreading ^\= kbfee.f_allgasnum \:True\,False}" ErrorMessage="输入当前用气指数不能大于累计购气量"/>
+                            </a:Data.Prop>
+                        </TextBox>
+
+
+
+
+
+
+
+
+
+
+
                         <TextBlock Text="付手续费方：" Grid.Column="3" Margin="148,2,2,3" Grid.Row="13" TextWrapping="Wrap" TextAlignment="Right" Height="25" RenderTransformOrigin="0.503,0.76" Grid.ColumnSpan="2"/>
                         <TextBox IsReadOnly="True" x:Name="f_userid" Text="{m:Bind Path=f_userid}"  Grid.Column="1" Margin="0,0,0,-5" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="25" VerticalAlignment="Stretch"  >
                             <a:Data.Prop>
@@ -328,7 +398,7 @@
                             </a:Data.Prop>
                         </TextBox>
 
-                        <TextBox Text="{m:Bind Path=f_outfeereason}" IsReadOnly="False" Grid.Column="1" Margin="1,5,1,3" Grid.Row="12" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
+                        <TextBox Text="{m:Bind Path=f_outfeereason}" IsReadOnly="False" Grid.Column="1" Margin="1,0,1,3" Grid.Row="12" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_outfeereason"  NotNull="True"/>
                             </a:Data.Prop>
@@ -338,17 +408,17 @@
                                 <o:PropertySetter PropertyName="f_movepoundage"  />
                             </a:Data.Prop>
                         </TextBox>
-                        <!--从卡上读购气次数{m:Exp Str=card.BuyTimes\=>ReadCompleted+1}-->
-                        <TextBox Text="{m:Bind Path=f_outmoney}" FontWeight="Bold" Foreground="Red" Grid.Column="4" Margin="137,4,3,1" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="2" Height="Auto" VerticalAlignment="Stretch"  >
+                        <!--从卡上读购气次数
+                          ValidationVal="{m:Exp Str= kbfee.f_outmoney ^\= kbfee.f_yhju \:True\,False}" ErrorMessage="转出金额超过结余"
+								-->
+                        <TextBox Text="{m:Bind Path=f_outmoney}" IsReadOnly="{m:Exp Str=pipelines.SelectedItem.f_gasmeterstyle\=\=$卡表$\:$True$\,$False$}" FontWeight="Bold" Foreground="Red" Grid.Column="3" Margin="1,4,139,1" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="2" Height="Auto" VerticalAlignment="Stretch"  >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_outmoney" Default="0" 
-                                 ValidationVal="{m:Exp Str= kbfee.f_outmoney ^\= kbfee.f_yhju \:True\,False}" ErrorMessage="转出金额超过结余"
-									/>
-                                <!--  ValidationVal="{m:Exp Str= kbfee.f_outgasno ^\= kbfee.f_remaingas \:True\,False}" ErrorMessage="转出气量超过余气量"-->
+                                <o:PropertySetter PropertyName="f_outmoney" Default="0" NoDependValue="{m:Exp Str=kbfee1.DataContext.f_gasprice!\=$null$:kbfee1.DataContext.f_outgasno*kbfee1.DataContext.f_gasprice\,$null$}"
+                               	/>
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Margin="146,6,6,29" Grid.Row="6" TextWrapping="Wrap" Text="转入表号：" TextAlignment="Right" Height="25" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-                        <TextBox Text="{m:Bind Path=f_inwatchno}" Grid.Column="2" Margin="138,6,2,0" Grid.Row="6" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" Height="Auto" Grid.RowSpan="1" Grid.ColumnSpan="2">
+                        <TextBlock Margin="8,6,0,29" Grid.Row="6" TextWrapping="Wrap" Text="转入表号：" TextAlignment="Right" Height="25" Grid.Column="4" Grid.RowSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_inwatchno}" Grid.Column="5" Margin="0,6,3,0" Grid.Row="6" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" Height="Auto" Grid.RowSpan="1" Grid.ColumnSpan="1">
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_inwatchno"    NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_meternumber}"/>
                             </a:Data.Prop>
@@ -356,7 +426,7 @@
 
                         <!--<Button Click="{m:Exp Str=card.ReadCard()}" Content=" 读卡 " Margin="183,5,10,5" Grid.Row="9" Grid.Column="1"/>
                             -->
-                        <TextBox Text="{m:Bind Path=f_meternumber}"  Grid.Column="3" Margin="0,8,0,29" Grid.Row="1" HorizontalAlignment="Stretch" Width="Auto" Height="Auto" IsReadOnly="True" Grid.RowSpan="2" >
+                        <TextBox Text="{m:Bind Path=f_meternumber}"  Grid.Column="5" Margin="3,5,2,2" Grid.Row="0" HorizontalAlignment="Stretch" Width="Auto" Height="Auto" IsReadOnly="True" Grid.RowSpan="1" Grid.ColumnSpan="1" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_meternumber" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_meternumber}"/>
                             </a:Data.Prop>
@@ -372,20 +442,20 @@
                             </a:Data.Prop>
                         </TextBox>
 
-                        <TextBlock Text="转出表号：" Margin="2,8,0,4" Grid.Row="1" TextWrapping="Wrap" TextAlignment="Right" Height="25" Grid.Column="2"/>
+                        <TextBlock Text="转出表号：" Margin="0,5,2,0" TextWrapping="Wrap" TextAlignment="Right" Height="25" Grid.Column="4"/>
                         <TextBox Text="{m:Bind Path=f_repairnumfei}" Grid.Column="5" Margin="0,18,0,-6" Grid.Row="7" TextWrapping="Wrap" IsReadOnly="True" Height="25" VerticalAlignment="Stretch" HorizontalAlignment="Right" Width="31" Visibility="Collapsed">
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_repairnumfei"  
 										Value="{m:Exp Str=kbfee.f_usertype\=\=$非民用$:kbfee.f_repairnum.ToInt()*12\,0}" />
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Text="转入用户/单位名称：" Grid.Column="3" Margin="147,6,3,6" Grid.Row="6" TextWrapping="Wrap" TextAlignment="Right" Grid.ColumnSpan="2"/>
-                        <TextBox Text="{m:Bind Path=f_inarea}"  Grid.Column="4" Margin="137,4,3,1" TextWrapping="Wrap" Grid.ColumnSpan="2" IsReadOnly="True" Grid.Row="6"  HorizontalAlignment="Stretch" Height="25" VerticalAlignment="Stretch" Grid.RowSpan="1" >
+                        <TextBlock Text="转入用户/单位名称：" Grid.Column="2" Margin="0,6" Grid.Row="6" TextWrapping="Wrap" TextAlignment="Right"/>
+                        <TextBox Text="{m:Bind Path=f_inarea}"  Grid.Column="3" Margin="0,4,0,1" TextWrapping="Wrap" Grid.ColumnSpan="1" IsReadOnly="True" Grid.Row="6"  HorizontalAlignment="Stretch" Height="25" VerticalAlignment="Stretch" Grid.RowSpan="1" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_inarea" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_username}"/>
                             </a:Data.Prop>
                         </TextBox>
-                        <sdk:DatePicker  SelectedDate="{m:Bind Path=f_outfeetime}" IsEnabled="False"  Grid.Column="5" Margin="0,6,0,0" Grid.Row="1"  IsTodayHighlighted="True" IsDropDownOpen="False" SelectedDateFormat="Short" VerticalAlignment="Stretch" Height="Auto"  FontWeight="Bold" Foreground="Red" Grid.RowSpan="1" >
+                        <sdk:DatePicker  SelectedDate="{m:Bind Path=f_outfeetime}" IsEnabled="False"  Grid.Column="1" Margin="0,2,0,4" Grid.Row="3"  IsTodayHighlighted="True" IsDropDownOpen="False" SelectedDateFormat="Short" VerticalAlignment="Stretch" Height="Auto"  FontWeight="Bold" Foreground="Red" Grid.RowSpan="1" Grid.ColumnSpan="1" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_outfeetime"  Default="{m:Exp Str=SysTime.Today}"/>
                             </a:Data.Prop>
@@ -407,29 +477,17 @@
                                 <o:PropertySetter PropertyName="f_byman"   />
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Text="楼号：" Margin="4,8,0,4" TextWrapping="Wrap"  TextAlignment="Right" Height="25" Grid.Column="4"/>
-                        <TextBox x:Name="f_cusDom" Text="{m:Bind Path=f_cusDom}"  Grid.Column="5" Margin="0,5,3,29" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" Grid.Row="0" IsReadOnly="True" HorizontalAlignment="Stretch" Width="Auto" Grid.RowSpan="2" >
-                            <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_cusDom" Value="{m:Exp Str=pipelines.SelectedItem.f_cusDom}" />
-                            </a:Data.Prop>
-                        </TextBox>
                         <TextBox Text="{m:Bind Path=f_username}" IsReadOnly="True" Grid.Column="3" Margin="0,5,0,0" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" Width="Auto"  >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_username" Value="{m:Exp Str=pipelines.SelectedItem.f_username}"/>
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Text="门牌号：" Margin="13,6,0,6" TextWrapping="Wrap"  TextAlignment="Right" Height="25" Grid.Row="1"/>
+                        <TextBlock Text="小区：" Margin="13,6,0,6" TextWrapping="Wrap"  TextAlignment="Right" Height="25" Grid.Row="1"/>
                         <TextBox x:Name="f_apartment" Text="{m:Bind Path=f_apartment}"  Grid.Column="1" Margin="0,8,0,29" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" Grid.Row="1" IsReadOnly="True" Grid.RowSpan="2" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_apartment" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_apartment}" />
+                                <o:PropertySetter PropertyName="f_apartment" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_districtname}" />
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Text="开户日期：" Margin="5,4,5,1" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="3" Width="130" Height="25"/>
-                        <sdk:DatePicker  SelectedDate="{m:Bind Path=f_dateofopening}"  Grid.Column="1" Margin="0,4,0,3" Grid.Row="3"  IsTodayHighlighted="True" IsDropDownOpen="False" SelectedDateFormat="Short" VerticalAlignment="Stretch" Height="Auto"  FontWeight="Bold" Foreground="Red" Grid.RowSpan="1" >
-                            <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_dateofopening"  Value="{m:Exp Str=pipelines.SelectedItem.f_dateofopening}" />
-                            </a:Data.Prop>
-                        </sdk:DatePicker>
 
                         <TextBlock Visibility="Collapsed" Text="是否转出维修费：" Margin="0,6" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="7" Width="130" Height="25" Grid.Column="2"/>
                         <ComboBox Visibility="Collapsed" DisplayMemberPath="name" SelectedValuePath="name" ItemsSource="{m:Exp Str=shifoulist}" SelectedValue="{m:Bind Path=f_whfout}"   Grid.Column="3" Margin="0,6" Grid.Row="7" HorizontalAlignment="Stretch" Width="Auto" Height="25" VerticalAlignment="Stretch" >
@@ -444,22 +502,16 @@
                                 <o:PropertySetter PropertyName="f_innewbeginfee"     NoDependValue="{m:Exp Str=kbfee.f_whfout\=\= $是$ and kbfee.f_beginfee !\=null and kbfee.f_canoutwxf !\=null and kbfee.f_canoutwxf > 0 \: kbfee.f_inbeginfee.ToDate().AddMonths(kbfee.f_canoutwxf.ToInt()) \,kbfee.f_inbeginfee.ToDate()}"   />
                             </a:Data.Prop>
                         </sdk:DatePicker>
-                        <TextBlock Text="转入楼号：" Grid.Column="1" Margin="146,6,3,6" Grid.Row="7" TextWrapping="Wrap" TextAlignment="Right" Grid.ColumnSpan="2"/>
-                        <TextBox Text="{m:Bind Path=f_incusdom}"  Grid.Column="2" Margin="139,5,2,1" TextWrapping="Wrap" Grid.ColumnSpan="2" IsReadOnly="True" Grid.Row="7"  HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" >
-                            <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_incusdom" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_cusDom}"/>
-                            </a:Data.Prop>
-                        </TextBox>
-                        <TextBlock Text="门牌号：" Margin="7,2,1,3" TextWrapping="Wrap"  TextAlignment="Right" Height="25" Grid.Row="7"/>
+                        <TextBlock Text="小区：" Margin="7,2,1,3" TextWrapping="Wrap"  TextAlignment="Right" Height="25" Grid.Row="7"/>
                         <TextBox  Text="{m:Bind Path=f_inapartment}"  Grid.Column="1" Margin="0,4,0,3" TextWrapping="Wrap" Grid.ColumnSpan="1" Height="Auto" VerticalAlignment="Stretch" Grid.Row="7" IsReadOnly="True" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_inapartment" Value="{m:Exp Str=pipelines1.SelectedItem.f_apartment}" />
+                                <o:PropertySetter PropertyName="f_inapartment" Value="{m:Exp Str=pipelines1.SelectedItem.f_districtname}" />
                             </a:Data.Prop>
                         </TextBox>
 
                         <!---->
                             <TextBlock Text="转入后用户结余：" Grid.Column="2" Margin="21,0,1,2" Grid.Row="8" TextWrapping="Wrap" TextAlignment="Right" Height="22" VerticalAlignment="Bottom"/>
-                        <TextBox Text="{m:Bind Path=f_newmoney}" Foreground="Red"  Grid.Column="2" IsReadOnly="True" Margin="139,4,1,2" Grid.Row="8" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.ColumnSpan="2" >
+                        <TextBox Text="{m:Bind Path=f_newmoney}" Foreground="Red"  Grid.Column="3" IsReadOnly="True" Margin="0,4,1,2" Grid.Row="8" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.ColumnSpan="1" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_newmoney" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_zhye + kbfee.f_outmoney}"  />
                             </a:Data.Prop>
@@ -468,6 +520,13 @@
                         <TextBox Text="{m:Bind Path=f_zyryhjy}" Foreground="Red"  Grid.Column="0" IsReadOnly="True" Margin="139,4,1,2" Grid.Row="8" TextWrapping="Wrap" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.ColumnSpan="2" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_zyryhjy" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_zhye}"  />
+                            </a:Data.Prop>
+                        </TextBox>
+                                 <TextBlock Text="地址：" Margin="23,0,149,4" Grid.Row="7" TextWrapping="Wrap" TextAlignment="Right" Height="22" VerticalAlignment="Bottom" Grid.ColumnSpan="2" Grid.Column="2"/>
+                      
+                            <TextBox Text="{m:Bind Path=f_zraddress}" Foreground="Red"  Grid.Column="3" Margin="0,3" TextWrapping="Wrap" Grid.ColumnSpan="2" IsReadOnly="True" Grid.Row="7"  HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" >
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_zraddress" NoDependValue="{m:Exp Str=pipelines1.SelectedItem.f_address}"/>
                             </a:Data.Prop>
                         </TextBox>
                         <TextBlock Margin="1,6,149,29" Grid.Row="14" TextWrapping="Wrap" Text="网　　点：" TextAlignment="Right" Height="25" Grid.Column="2" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
@@ -496,6 +555,26 @@
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_beizhu"/>
                             </a:Data.Prop>
+                        </TextBox>
+                        <TextBlock Text="气表类型：" Margin="0,11,2,24" Grid.Row="4" TextWrapping="Wrap" TextAlignment="Right" Height="25" Grid.Column="4" Grid.RowSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_gasmeterstyle}" Grid.Column="5" Margin="0,7,2,28" Grid.Row="4" TextWrapping="Wrap" IsReadOnly="True" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="1" Grid.RowSpan="2" >
+                        	<a:Data.Prop>
+                        		<o:PropertySetter PropertyName="f_gasmeterstyle"  NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_gasmeterstyle}"/>
+                        	</a:Data.Prop>
+                        </TextBox>
+                        <TextBlock Text="转出卡号：" Margin="0,6,2,29" Grid.Row="3" TextWrapping="Wrap" TextAlignment="Right" Height="25" Grid.Column="2" Grid.RowSpan="2"/>
+                        <TextBox Text="{m:Bind Path=f_cardid}" Grid.Column="3" Margin="0,2,2,3" Grid.Row="3" TextWrapping="Wrap" IsReadOnly="True" HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="1" >
+                        	<a:Data.Prop>
+                        		<o:PropertySetter PropertyName="f_cardid"  NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_cardid}"/>
+                        	</a:Data.Prop>
+                        </TextBox>
+                        <TextBlock Text="转出气量：" Margin="0,9,0,26" TextWrapping="Wrap" TextAlignment="Right" Grid.Row="3" Height="25" Grid.Column="4" Grid.RowSpan="2"/>
+                        <TextBox IsReadOnly="True" Text="{m:Bind Path=f_outgasno}" FontWeight="Bold" Foreground="Red" Grid.Column="5" Margin="0,0,0,29" TextWrapping="Wrap" Grid.ColumnSpan="1" Grid.Row="3" Height="25" VerticalAlignment="Bottom" Grid.RowSpan="2"  >
+                        	<a:Data.Prop>
+                        		<o:PropertySetter PropertyName="f_outgasno" Default="0" NoDependValue="{m:Exp Str=kbfee.f_allgasnum-kbfee.f_watchreading}"
+									/>
+                        		<!--  ValidationVal="{m:Exp Str= kbfee.f_outgasno ^\= kbfee.f_remaingas \:True\,False}" ErrorMessage="转出气量超过余气量"-->
+                        </a:Data.Prop>
                         </TextBox>
                         <!--<TextBlock Text="写卡气量：" Margin="1,5,149,0" Grid.Row="10" TextWrapping="Wrap" TextAlignment="Right" FontSize="13.333" Height="25" Grid.ColumnSpan="2"/>
                         <TextBox Grid.Column="1" Foreground="Red" Text="{m:Bind Path=f_gas}" Margin="1,5,139,0" TextWrapping="Wrap" Grid.ColumnSpan="2" Grid.Row="10" Height="25" IsReadOnly="True" >

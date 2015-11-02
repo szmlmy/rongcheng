@@ -128,21 +128,17 @@
 		<!--更新发票记录为作废-->
 		<b:HQLAction Name="Updatefapiao"   WebClientInfo="{StaticResource dbclient}" 
 			HQL="{m:Exp Str=$update t_fapiaoinfos set f_fapiaostatue\= \'作废\'  where id \= \{fapiao.id\}}"/>
-        <!--冲发卡售气记录时，更新发卡记录为无效-->
-        <b:HQLAction Name="UpdateFaka"   WebClientInfo="{StaticResource dbclient}">
-                <b:HQLAction.HQL>
-                    <m:Exp Str="$update t_myfaka set f_payfeevalid=
-                           {sellinggas.f_payfeetype==$发卡售气$:$'无效'$,$f_payfeevalid$} 
-                           where f_userid={sellinggas.f_userid}"></m:Exp>
-                </b:HQLAction.HQL>
-            </b:HQLAction>
-        <!--添加一笔负记录-->
+        <!--冲发卡售气记录时，更新发卡记录为无效
+            <b:HQLAction Name="UpdateFaka"   WebClientInfo="{StaticResource dbclient}"
+                HQL="{m:Exp Str=update t_myfaka set f_payfeevalid={sellinggas.f_payfeetype\=\=\'发卡售气\':\'无效\'\,$f_payfeevalid$} where f_userid={sellinggas.f_userid}}"     />
+           --> 
+            <!--添加一笔负记录-->
         <b:HQLAction Name="InsertSellingGas" Type="sql"     WebClientInfo="{StaticResource dbclient}">
                 <b:HQLAction.HQL   >
                     <m:Exp Str="$insert into t_sellinggas(f_userid, f_pregas, f_preamount, f_grossproceeds,f_gasprice,f_cardid,f_username,f_address,f_districtname
                            ,f_sgoperator, f_deliverytime, f_deliverydate, f_filiale, f_sgnetwork, f_gaspricetype,f_gaswatchbrand,f_usertype,
                            f_payfeevalid)
-                           values('{sellinggas.f_userid}', -{sellinggas.f_pregas}, -{sellinggas.f_preamount}, -{sellinggas.f_grossproceeds},{sellinggas.f_gasprice},{sellinggas.f_cardid},'{sellinggas.f_username==null:$null$,sellinggas.f_username}','{sellinggas.f_address==null:$null$,sellinggas.f_address}','{sellinggas.f_districtname==null:$null$,sellinggas.f_districtname}',
+                           values('{sellinggas.f_userid}', -{sellinggas.f_pregas}, -{sellinggas.f_preamount}, -{sellinggas.f_grossproceeds},{sellinggas.f_gasprice},'{sellinggas.f_cardid}','{sellinggas.f_username==null:$null$,sellinggas.f_username}','{sellinggas.f_address==null:$null$,sellinggas.f_address}','{sellinggas.f_districtname==null:$null$,sellinggas.f_districtname}',
                            '{userfilego.f_reversalname==null:$null$,userfilego.f_reversalname}', '{userfilego.f_reversaltime==null:$null$,userfilego.f_reversaltime}','{userfilego.f_reversaldate==null:$null$,userfilego.f_reversaldate}', '{userfilego.f_filiale==null:$null$,userfilego.f_filiale}', '{userfilego.f_sgnetwork==null:$null$,userfilego.f_sgnetwork}',
                            '{sellinggas.f_gaspricetype==null:$null$,sellinggas.f_gaspricetype}','{sellinggas.f_gaswatchbrand==null:$null$,sellinggas.f_gaswatchbrand}','{sellinggas.f_usertype==null:$null$,sellinggas.f_usertype}','冲正')"
                     ></m:Exp>
@@ -156,8 +152,8 @@
 		   	<b:BatchInfo Source="{m:Exp Str=UpdateFillgas}" MethodName="InvokeToJson"/> 
 		   	<b:BatchInfo Source="{m:Exp Str=Updatefapiao}" MethodName="InvokeToJson"/> 
 			<b:BatchInfo Source="{m:Exp Str=userfile.DataContext}" MethodName="SaveToJson"/>
-            <!--更新发卡记录是否有效标记-->
-            <b:BatchInfo Source="{m:Exp Str=UpdateFaka}" MethodName="InvokeToJson"/>
+            <!--更新发卡记录是否有效标记
+            <b:BatchInfo Source="{m:Exp Str=UpdateFaka}" MethodName="InvokeToJson"/>-->
             <!--添加一笔负记录-->
                         <b:BatchInfo Source="{m:Exp Str=InsertSellingGas}" MethodName="InvokeToJson"/>
             </b:BatchExcuteAction>

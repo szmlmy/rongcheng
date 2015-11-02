@@ -398,5 +398,21 @@
 		<property name="f_stair4pricechange" type="double"/>
 		<!--阶段月数-->
 		<property name="f_stairmonthschange" type="int"/>
+		
+		<property name="f_jbzyqjechange" type="double"/>
+		<!--旧系统备注-->
+		<property name="f_beizhuchange" type="string" length="1000"/>
+		
+			<!-- ***************押金*************** -->
+		<!--押金-->
+		<property name="f_yajin" type="string"/>
+		
+		<property name="f_jbzyqje" type="double"/>
+		<!--旧系统用气地址-->
+		<property name="f_oldaddress" type="string"/>
+		<!--旧系统备注-->
+		<property name="f_beizhu" type="string" length="1000"/>
+		
+		
 </class>
 </hibernate-mapping>

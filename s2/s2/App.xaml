@@ -27,7 +27,9 @@
         <o:DataPagerConverter x:Key="DataPagerConverter"/>
 
 
-        <!--开发环境-->
+        <!--开发环境
+
+
 
 
         <o:WebClientInfo x:Key="ldapaddress" BaseAddress="http://127.0.0.1:83/rs"/>
@@ -43,9 +45,10 @@
         <o:WebClientInfo x:Key="chargeserver"  BaseAddress="http://127.0.0.1:8080/rs/charge"/>
         <o:WebClientInfo x:Key="tunnelurl"  BaseAddress="http://127.0.0.1:8080/rs/tunnel"/>
 
+-->
+        <!--荣成连接 -->
 
 
-        <!--荣成连接
 
         <o:WebClientInfo x:Key="ldapaddress" BaseAddress="http://192.168.2.19:8090/RCsellingres/rs"/>
         <o:WebClientInfo x:Key="saveuser" BaseAddress="http://192.168.2.19:8090/RCsellingres/rs/user/entity"/>
@@ -61,8 +64,10 @@
         <o:WebClientInfo x:Key="chargeserver"  BaseAddress="http://192.168.2.19:8090/RCsellinggas/rs/charge"/>
         <o:WebClientInfo x:Key="tunnelurl"  BaseAddress="http://192.168.2.19:8090/RCsellinggas/rs/tunnel"/>
 
--->
 
+
+        
+        
         <!-- 
  
         <o:WebClientInfo x:Key="ldapaddress" BaseAddress="http://127.0.0.1:82/rs"/>

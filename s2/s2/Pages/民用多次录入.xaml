@@ -130,7 +130,7 @@
 			<!--用户列表对象-->
 			<o:PagedObjectList Name="userfileslist" WebClientInfo="{StaticResource dbclient}"
 		       	Path="{m:Exp Str=$from t_userfiles where \{search.Condition\} and f_gasmeterstyle\=\'机表\'}"
-		       	PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames="id"/>
+		       	PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames="f_times"/>
 	</m:ResourceLoad>
   <c:BusyIndicatorEx IsBusy="{m:Exp Str=userfileslist.IsBusy}" BusyContent="正在查询，请稍等...">
   	<toolkit:DockPanel HorizontalAlignment="Stretch" Height="Auto" VerticalAlignment="Stretch" Margin="0">
@@ -180,9 +180,10 @@
   				</TextBox>
   			</Grid>
   		</toolkit:DockPanel>
+                <!--SelectedItem="{m:Exp Str=userfileslist[data.f_userid\=\=scbdw.f_userid].First()}"-->
   		<sdk:DataPager x:Name="pager" Source="{Binding ItemsSource.Count, Converter={StaticResource DataPagerConverter}, ElementName=userfiles}" PageSize="20" Height="24" FontSize="13.333" toolkit:DockPanel.Dock="Bottom"/>
   		<sdk:DataGrid x:Name="userfiles"  Margin="0,-5,0,0"  FontSize="13.333" ItemsSource="{m:Exp Str=userfileslist}"
-  			SelectedItem="{m:Exp Str=userfileslist[data.f_userid\=\=scbdw.f_userid].First()}"
+  			
   			AutoGenerateColumns="False" Width="Auto" Background="{x:Null}" IsReadOnly="True" >
   			<sdk:DataGrid.Columns>
   				<sdk:DataGridTextColumn Header="序  号" Binding="{Binding Index}"/>

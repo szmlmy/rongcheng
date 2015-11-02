@@ -120,6 +120,8 @@
 		<property name="f_cmoperator" type="string"/>
 		<!--操作日期-->
 		<property name="f_cmdate" type="date"/>
+		<!--操作时间-->
+		<property name="f_cmtime" type="time"/>
 		<!-- 分公司 -->
 		<property name="f_filiale" type="string"/>
 		<!-- 分公司编号-->

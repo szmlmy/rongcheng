@@ -206,6 +206,6 @@
 		<property name="withholdingstatus_uuid" type="string"/>
 		<!--旧系统表具uuid-->
 		<property name="meter_uuid" type="string"/>
-
+		<property name="f_jbzyqje" type="double"/>
 	</class>
 </hibernate-mapping>

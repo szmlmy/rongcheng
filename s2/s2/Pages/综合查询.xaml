@@ -402,15 +402,17 @@
 								<sdk:DataGridTextColumn Header="是否有效" Binding="{Binding f_payfeevalid}"/>
 								<sdk:DataGridTextColumn Header="购 气 量" Binding="{Binding f_pregas}"/>
 								<sdk:DataGridTextColumn Header="气    价" Binding="{Binding f_gasprice}"/>
-								<sdk:DataGridTextColumn Header="购气金额" Binding="{Binding f_preamount}"/>
+                                    <sdk:DataGridTextColumn Header="购气金额" Binding="{Binding f_pregas}"/>
 								<sdk:DataGridTextColumn Header="交费日期" Binding="{Binding f_deliverydate,StringFormat=yyyy-MM-dd}"/>
 								<sdk:DataGridTextColumn Header="交费时间" Binding="{Binding f_deliverytime,StringFormat=hh:mm:ss tt}"/>
 								<sdk:DataGridTextColumn Header="旧业务类型" Binding="{Binding f_oldtype}"/>
-								<sdk:DataGridTextColumn Header="维护费交费开始年月" Binding="{Binding f_beginfee,StringFormat=yyyy-MM}"/>
-								<sdk:DataGridTextColumn Header="维护费交费截止年月" Binding="{Binding f_endfee,StringFormat=yyyy-MM}"/>
-								<sdk:DataGridTextColumn Header="维护费金额" Binding="{Binding f_amountmaintenance}"/>
 								<sdk:DataGridTextColumn Header="网　　点" Binding="{Binding f_sgnetwork}"/>
 								<sdk:DataGridTextColumn Header="操 作 员" Binding="{Binding f_sgoperator}"/>
+                                    <!--
+								<sdk:DataGridTextColumn Header="维护费交费开始年月" Binding="{Binding f_beginfee,StringFormat=yyyy-MM}"/>
+								<sdk:DataGridTextColumn Header="维护费交费截止年月" Binding="{Binding f_endfee,StringFormat=yyyy-MM}"/>
+                                
+								<sdk:DataGridTextColumn Header="维护费金额" Binding="{Binding f_amountmaintenance}"/>-->
 
 								
 							</sdk:DataGrid.Columns>

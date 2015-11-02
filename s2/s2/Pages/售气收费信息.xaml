@@ -47,6 +47,9 @@
             <!--气表品牌-->
             <o:ObjectList Name="qblist"  EntityType="paramvalue" HasEmptyRow="True" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气表品牌' order by id"/>
             <o:ObjectList Name="qblistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气表品牌' " HasEmptyRow="True"/>
+            <!--气表类型-->
+            <o:ObjectList Name="qblxlist"  EntityType="paramvalue" HasEmptyRow="True" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气表类型' order by id"/>
+            <o:ObjectList Name="qblxlistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气表类型' " HasEmptyRow="True"/>
             <!--气价类型-->
             <o:ObjectList Name="qjlist"  EntityType="paramvalue" HasEmptyRow="True" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气价类型' order by id"/>
             <o:ObjectList Name="qjlistnull" EntityType="paramvalue" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='气价类型' " HasEmptyRow="True"/>
@@ -107,7 +110,7 @@
                                 <o:PropertySetter PropertyName="f_username"  Operator="f_username like '%this%'"/>
                             </a:Data.Prop>
                         </TextBox>
-                        <ComboBox Name="tj9" Visibility="{m:Exp Str='LoginUser.f_fengongsi \=\= zonggongsi.value:$Visible$\,$Collapsed$'}" SelectedValue="{m:Bind Path=f_filiale}" Grid.Row="0" Grid.Column="5" ItemsSource="{m:Exp Str=fgslist}"  Margin="0,2,0,1"  SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto">
+                        <!--    <ComboBox Name="tj9" Visibility="{m:Exp Str='LoginUser.f_fengongsi \=\= zonggongsi.value:$Visible$\,$Collapsed$'}" SelectedValue="{m:Bind Path=f_filiale}" Grid.Row="0" Grid.Column="5" ItemsSource="{m:Exp Str=fgslist}"  Margin="0,2,0,1"  SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto">
                            <ComboBox.ItemTemplate>
 									<DataTemplate>
 										<TextBlock Text="{Binding name}" Height="20"></TextBlock>
@@ -116,10 +119,10 @@
 						    <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_filiale"  Operator="f_filiale like 'this%'"/>
                             </a:Data.Prop>
-                        </ComboBox>
+                        </ComboBox>-->
                         <Button Content=" 查  询" x:Name="dansearchbutton" Grid.Row="3" Grid.Column="6" Click="{m:Exp Str=daninfosearch.DataContext.Search()}" Margin="18,0,11,0" FontSize="14"  />
                         <StackPanel Grid.Row="3" Grid.Column="6" Orientation="Horizontal"  Margin="69,0,0,0" Grid.ColumnSpan="2">
-                            <Button Content=" 置  空"  Click="{m:Exp Str=daninfosearch.DataContext.f_userid\=null;daninfosearch.DataContext.f_cardid\=null;daninfosearch.DataContext.f_username\=null;daninfosearch.DataContext.f_yytdate1\=null;daninfosearch.DataContext.f_yytdate2\=null;tj5.SelectedValue\=null;tj6.SelectedValue\=null;tj9.SelectedValue\=null;tja.SelectedValue\=null;tjb.SelectedValue\=null;tjc.SelectedValue\=null;tjwangdian.SelectedValue\=null;tjczy.SelectedValue\=null;tjczy_Copy.SelectedValue\=null;daninfosearch.DataContext.startinvoicenum\=null;daninfosearch.DataContext.endinvoicenum\=null;daninfosearch.DataContext.f_districtname\=null;tjc_Copy.SelectedValue\=null}" FontSize="14" HorizontalAlignment="Left" Width="54" />
+                            <Button Content=" 置  空"  Click="{m:Exp Str=daninfosearch.DataContext.f_userid\=null;daninfosearch.DataContext.f_cardid\=null;daninfosearch.DataContext.f_username\=null;daninfosearch.DataContext.f_yytdate1\=null;daninfosearch.DataContext.f_yytdate2\=null;tj5.SelectedValue\=null;tj6.SelectedValue\=null;tj51.SelectedValue\=null;tja.SelectedValue\=null;tjb.SelectedValue\=null;tjc.SelectedValue\=null;tjwangdian.SelectedValue\=null;tjczy.SelectedValue\=null;tjczy_Copy.SelectedValue\=null;daninfosearch.DataContext.startinvoicenum\=null;daninfosearch.DataContext.endinvoicenum\=null;daninfosearch.DataContext.f_districtname\=null;tjc_Copy.SelectedValue\=null}" FontSize="14" HorizontalAlignment="Left" Width="54" />
                             <Button Content="打印" Click="{m:Exp Str=print.Print()}"/>
                             <Button Content="导出Excel" IsEnabled="{m:Exp Str=daninfos.ItemsSource.Count!\=0:True\,False}" Click="{m:Exp Str=toExcel.ToExcel()}" />
                             <!--Button Content="导出Excel" Click="{m:Exp Str=excel.Export()}"	toolkit:DockPanel.Dock="Right" Background="white" Grid.Column="7" Grid.Row="3"/-->
@@ -168,7 +171,17 @@
                             </a:Data.Prop>
                         </sdk:DatePicker>
                         <TextBlock TextWrapping="Wrap" Text="到：" Grid.Column="2" Grid.Row="3" Margin="0,2,0,1" Height="25" TextAlignment="Right"/>
-                        <TextBlock TextWrapping="Wrap" Text="所属公司：" Grid.Column="4"  Margin="0,2,0,1" Height="25" TextAlignment="Right" />
+                        <TextBlock TextWrapping="Wrap" Text="气表类型：" Grid.Column="4"  Margin="0,2,0,1" Height="25" TextAlignment="Right" />
+                        <ComboBox Name="tj51" SelectedValue="{m:Bind Path=f_gasmeterstyle}" Grid.Column="5" ItemsSource="{m:Exp Str=qblxlistnull}"  Margin="0,2,0,1"  SelectedValuePath="name"  Height="25">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding name}" Height="20"></TextBlock>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_gasmeterstyle"  Operator="f_gasmeterstyle = 'this'"/>
+                            </a:Data.Prop>
+                        </ComboBox>
                         <TextBlock TextWrapping="Wrap" Text="用户类型：" Grid.Column="4"  Margin="0,2,0,1" Height="25" TextAlignment="Right" Grid.Row="1" />
                         <ComboBox x:Name="tja"  SelectedValue="{m:Bind Path=f_usertype}" Grid.Row="1" Grid.Column="5" ItemsSource="{m:Exp Str=usertypelistnull}"  Margin="0,2,0,1"  SelectedValuePath="name"  Height="25" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto" VerticalAlignment="Stretch">
                             <ComboBox.ItemTemplate>

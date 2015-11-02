@@ -18,9 +18,11 @@
     mc:Ignorable="d"  FontFamily="Microsoft YaHei">
     <Grid x:Name="LayoutRoot">
         <m:ResourceLoad Margin="0,0,-12,0">
-            <!--发卡费-->
-            <o:GeneralObject Name="fakafei" EntityType="t_singlevalue" WebClientInfo="{StaticResource dbclient}" 
+            <!--发卡费  
 		        IsInit="{m:Exp Str=print.State\=\=$End$ or zzprint.State\=\=$End$ or print.State\=\=$Cancle$ or zzprint.State\=\=$Cancle$}" 
+            -->
+            <o:GeneralObject Name="fakafei" EntityType="t_singlevalue" WebClientInfo="{StaticResource dbclient}" 
+                             IsInit="{m:Exp Str=SaveAction.State\=\=$End$}"
 		  		Path="{m:Exp Str=$one/from t_singlevalue where name \= \'\{LoginUser.f_fengongsi\}\{userfiles.f_usertype\}\卡\费\'}"   >
             </o:GeneralObject>
 
@@ -36,9 +38,9 @@
 			>
             </o:GeneralObject>
 
-            <!--换表对象-->
-            <o:GeneralObject Name="pipelinego" EntityType="t_changmeter" WebClientInfo="{StaticResource dbclient}" 
-		    IsInit="{m:Exp Str=print.State\=\=$End$ or zzprint.State\=\=$End$ or print.State\=\=$Cancle$ or zzprint.State\=\=$Cancle$}">
+            <!--换表对象  
+		    IsInit="{m:Exp Str=print.State\=\=$End$ or zzprint.State\=\=$End$ or print.State\=\=$Cancle$ or zzprint.State\=\=$Cancle$}"-->
+            <o:GeneralObject Name="pipelinego" EntityType="t_changmeter" WebClientInfo="{StaticResource dbclient}"  IsInit="{m:Exp Str=SaveAction.State\=\=$End$}">
                 <o:PropertySetter PropertyName="f_zherownum" Value="{m:Exp Str=userfiles !\= null and userfiles.f_zherownum !\= null and userfiles.f_zherownum.ToInt()^24:userfiles.f_zherownum+1\,1}"/>
                 <o:PropertySetter PropertyName="f_state" Default="换表登记"></o:PropertySetter>
             </o:GeneralObject>
@@ -47,9 +49,10 @@
             <o:PagedObjectList Name="pipelineslist" WebClientInfo="{StaticResource dbclient}"
             Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\} and f_userstate\=\'正常\' and f_userstate !\=\'销户\' and f_filiale \=\'\{LoginUser.f_fengongsi\}\'}"
 			PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames="f_times"/>
-            <!--用户对象-->
-            <o:GeneralObject Name="userfiles" NotEmpty="true" EntityType="t_userfiles" WebClientInfo="{StaticResource dbclient}"
-			IsInit="{m:Exp Str=print.State\=\=$End$ or zzprint.State\=\=$End$ or print.State\=\=$Cancle$ or zzprint.State\=\=$Cancle$}"
+            <!--用户对象   
+			IsInit="{m:Exp Str=print.State\=\=$End$ or zzprint.State\=\=$End$ or print.State\=\=$Cancle$ or zzprint.State\=\=$Cancle$}"-->
+            <o:GeneralObject Name="userfiles" NotEmpty="true" EntityType="t_userfiles" WebClientInfo="{StaticResource dbclient}" 
+                              IsInit="{m:Exp Str=SaveAction.State\=\=$End$}"
             Path="{m:Exp Str=
 			card.CardId\=>ReadCompleted!\=null and card.Factory!\=null:$one/from t_userfiles where f_cardid\=\'\{card.CardId\}\' and f_aliasname\=\'\{card.Factory\}\' and f_filiale\=\'\{LoginUser.f_fengongsi\}\'$\,pipelines.SelectedItem.f_userid\=>SelectionChanged\!\=null:$one/from t_userfiles where f_userid\=\'\{pipelines.SelectedItem.f_userid\}\' and f_filiale\=\'\{LoginUser.f_fengongsi\}\'$\,$null$}">
                 <!--换表回写-->
@@ -284,6 +287,12 @@
                                 <o:PropertySetter PropertyName="f_userid" NoDependValue="{m:Exp Str=userfiles.f_userid\=&gt;Completed}"/>
                             </a:Data.Prop>
                         </TextBox>
+                        <TextBlock Grid.Column="4" Margin="0" Grid.Row="18" Text="换表时间：" TextWrapping="Wrap" TextAlignment="Right" Height="25"></TextBlock>
+                        <!----><toolkit:TimePicker Value="{m:Bind Path=f_recoverycardtime}" IsEnabled="False" Grid.Column="5" Margin="0" Grid.Row="18"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
+    						<a:Data.Prop>
+    							<o:PropertySetter PropertyName="f_recoverycardtime" Value="{m:Exp Str=SecRefresh\=&gt;TimeEvent!\=null:SysTime.Now\,$$}"/>
+    						</a:Data.Prop>
+    					</toolkit:TimePicker>
                         <TextBox Text="{m:Bind Path=f_username}" Grid.Column="1" Margin="0,3,0,2" TextWrapping="Wrap" VerticalAlignment="Stretch" Grid.Row="2" Grid.ColumnSpan="1" IsReadOnly="True" Height="25">
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_username" NoDependValue="{m:Exp Str=userfiles.f_username\=&gt;Completed}" />
@@ -389,8 +398,7 @@
                         </TextBox>
                         <TextBox Text="{m:Bind Path=f_cardfees}" Grid.Column="1" Margin="0" Grid.Row="9" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="25" >
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_cardfees" 
-								NoDependValue="{m:Exp Str=fakafei.value}"/>
+                                <o:PropertySetter PropertyName="f_cardfees"  Default="0"/>
                             </a:Data.Prop>
                         </TextBox>
                         <ComboBox x:Name="CoboxPinpai" DisplayMemberPath="f_pinpai" SelectedValuePath="f_pinpai" SelectedValue="{m:Bind Path=f_cmnewgaswatchbrand}" Grid.Column="3" Margin="0" Grid.Row="9" VerticalAlignment="Stretch" Height="25">
@@ -547,8 +555,8 @@
                                                   />
                             </a:Data.Prop>
                         </TextBox>
-                        <TextBlock Margin="0" Grid.Row="18" TextWrapping="Wrap" Text="类　　型：" Height="25" TextAlignment="Right" Grid.Column="4"/>
-                        <TextBox Text="{m:Bind Path=f_newtype}" Grid.Column="5" Margin="0" Grid.Row="18" TextWrapping="Wrap" VerticalAlignment="Stretch" IsReadOnly="True" Height="25">
+                        <TextBlock Margin="0,3,0,2" Grid.Row="18" TextWrapping="Wrap" Text="类　　型：" Height="25" TextAlignment="Right" Grid.Column="2"/>
+                        <TextBox Text="{m:Bind Path=f_newtype}" Grid.Column="3" Margin="0" Grid.Row="18" TextWrapping="Wrap" VerticalAlignment="Stretch" IsReadOnly="True" Height="25" Grid.ColumnSpan="1">
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_newtype" NoDependValue="{m:Exp Str=DaXiaoKa.SelectedItem.f_type}"/>
                             </a:Data.Prop>
@@ -847,10 +855,14 @@ Margin="18.667,280.706,381.139,0"/>
             </Grid>
         </Grid>
 
-        <!--发票和折子打印-->
-        <c:PrintObj Name="print1" Message="是否打印发票" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$}" Area="{m:Res Key=guoshuiprint}"/>
+        <!--发票和折子打印
+                    
+                  <c:PrintObj Name="print1" Message="是否打印发票" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$}" Area="{m:Res Key=guoshuiprint}"/>
         <c:PrintObj Name="zzprint" Message="是否打印购气证" IsPrint="{m:Exp Str=print1.State\=\=$End$}" Area="{m:Res Key=zheziprint}" />
-        <c:PrintObj Name="print" Message="是否打印发票" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$}" Area="{m:Res Key=aofengprint}" />
+        <c:PrintObj Name="print" Message="是否打印发票" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$}" Area="{m:Res Key=aofengprint}" />  
+                    
+                    -->
+
 
     </Grid>
 </UserControl>

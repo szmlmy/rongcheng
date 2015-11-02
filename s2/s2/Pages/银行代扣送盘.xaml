@@ -19,7 +19,7 @@
 
 	<Grid x:Name="LayoutRoot">
 		<m:ResourceLoad Margin="0,0,-12,0">
-			<o:ExcelObj Name="excel" Bind="f_userid,f_username,f_address，lastinputdate,f_usermc，f_idofcard，f_bankname，oughtfee" Source="{m:Exp Str=daninfos}"/>
+			<o:ExcelObj Name="excel" Bind="f_userid,f_username,f_address，ls,f_usermc，f_idofcard，f_bankname，oughtfee" Source="{m:Exp Str=daninfos}"/>
 			<!--操作员列表对象-->
 			<!--o:ObjectList Name="czylist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='操作员查询用' order by id"/-->
 			<o:ObjectList Name="czylist" WebClientInfo="{StaticResource dbclient}" Path="{m:Exp Str=$from paramvalue where param.name\=\'操作员查询用\' }" 
@@ -97,7 +97,7 @@
 						
  						<c:Excel x:Name="toExcel" HQL="{m:Exp Str=$sql:\{daninfos.ItemsSource.HQL\}}" 
    							 Completed="{m:Exp Str=downLoad.Down()}"
-   							 Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/RMB:币种|lastinputdate:提交日期|2:明细标志|index:顺序号|f_idofcard:付方卡号|f_userid:缴费编号|f_username:付方户名|f_bankname:收款单位开户行名|山东:省份|山东:收款方地区名|0200:收款方地区代码|0200026009333020489:收款账号|BDP300005490:协议编号|f_username:收款单位名称|oughtfee:付款金额|工资及退休金:用途| :备注| :付款账户短信通知手机号码| :自定义序号|1:是否工行账号| :付方账号开户行行号$}"/>	 
+   							 Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/RMB:币种|ls:提交日期|2:明细标志|index:顺序号|f_idofcard:付方卡号|f_userid:缴费编号|f_username:付方户名|f_bankname:收款单位开户行名|山东:省份|山东:收款方地区名|0200:收款方地区代码|0200026009333020489:收款账号|BDP300005490:协议编号|f_username:收款单位名称|oughtfee:付款金额|工资及退休金:用途| :备注| :付款账户短信通知手机号码| :自定义序号|1:是否工行账号| :付方账号开户行行号$}"/>	 
                             <c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}"></c:DownLoad>
 						<!--Button Content="导出Excel" Click="{m:Exp Str=excel.Export()}"	toolkit:DockPanel.Dock="Right" Background="white" Grid.Column="7" Grid.Row="3"/-->
 						</StackPanel>

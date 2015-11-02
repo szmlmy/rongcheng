@@ -15,7 +15,7 @@
     xmlns:toolkit="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit"
 	xmlns:System="clr-namespace:System;assembly=mscorlib"
 	mc:Ignorable="d" FontSize="13"
-	x:Class="Com.Aote.Pages.民用批量退押金" d:DesignWidth="1024" d:DesignHeight="768">
+	x:Class="Com.Aote.Pages.民用批量退押金" d:DesignWidth="1024" d:DesignHeight="685">
 
 
     <Grid x:Name="LayoutRoot">
@@ -27,7 +27,7 @@
 
             <!--更新结余-->
             <b:HQLAction Name="UpdateUser" WebClientInfo="{StaticResource dbclient}" 
-				HQL="{m:Exp Str=$update t_userfiles set f_zhye \= f_zhye+\{selstate.f_tuiyajin\}\ where f_districtname \= \'\{daninfosearch.DataContext.f_districtname\}\'}"/>
+				HQL="{m:Exp Str=$update t_userfiles set f_zhye \= f_zhye+\{selstate.f_tuiyajin\}\,f_jbzyqje \= f_jbzyqje+\{selstate.f_tuiyajin\}\ where f_districtname \= \'\{daninfosearch.DataContext.f_districtname\}\'}"/>
             <!--更新结余-->
             <b:HQLAction Name="Updateyajin" WebClientInfo="{StaticResource dbclient}" 
 				HQL="{m:Exp Str=$update t_userfiles set f_yajin \= \'押金已退\' where f_districtname \= \'\{daninfosearch.DataContext.f_districtname\}\'}"/>
@@ -71,6 +71,10 @@
                 <o:PropertySetter PropertyName="f_zhye" Value="{m:Exp Str=tempobj.f_zhye}"/>
                 <!--现有结余-->
                 <o:PropertySetter PropertyName="f_xyzhye" Value="{m:Exp Str=tempobj.f_xyzhye}"/>
+                <!--原有结余-->
+                <o:PropertySetter PropertyName="f_jbzyqje" Value="{m:Exp Str=tempobj.f_jbzyqje}"/>
+                <!--现有结余-->
+                <o:PropertySetter PropertyName="f_xyjbzyqje" Value="{m:Exp Str=tempobj.f_xyjbzyqje}"/>
                 <!--退押金-->
                 <o:PropertySetter PropertyName="f_tuiyajin" Value="{m:Exp Str=selstate.f_tuiyajin}"/>
                 <!--网点-->
@@ -102,7 +106,7 @@
         </m:ResourceLoad>
         <Grid>
             <c:BusyIndicatorEx BusyContent="正在工作，请稍等" Grid.ColumnSpan="1" IsBusy="{m:Exp Str=daninfos.ItemsSource.IsBusy}">
-                
+
                 <toolkit:DockPanel>
                     <StackPanel Name="daninfosearch" toolkit:DockPanel.Dock="Top" Margin="0,0,0,3" Background="#FFCFEFFF" Width="Auto" HorizontalAlignment="Stretch" Orientation="Horizontal" Height="40" >
                         <a:Data.Context>
@@ -144,11 +148,11 @@
                                     <o:PropertySetter PropertyName="f_userid" Operator="f_userid = 'this'"/>
                                 </a:Data.Prop>
                             </TextBox>-->
-                            
-                            
-                            
-                            
-                            
+
+
+
+
+
                             <Button Content=" 查  询" x:Name="dansearchbutton" Grid.Column="6" IsEnabled="{m:Exp Str=!daninfosearch.DataContext.HasErrors}" Click="{m:Exp Str=daninfosearch.DataContext.Search()}" FontSize="14" HorizontalAlignment="Left" Grid.Row="0" Margin="0,-1,0,1"  />
 
                             <!--<TextBlock TextWrapping="Wrap" Text="地址："  Margin="0,1.5" Height="25" TextAlignment="Right" Grid.Row="0" Grid.Column="2" />
@@ -181,7 +185,7 @@
                         <sdk:Label Height="28" VerticalAlignment="Top" Width="51" Content="操作员：" Margin="0,0,0,-2" />
                         <TextBox  Height="28" VerticalAlignment="Top" Width="120" Text="{m:Exp Str=LoginUser.name}" IsReadOnly="True" Margin="0,0,0,-2" RenderTransformOrigin="6.242,0.893" />
                         <sdk:Label Height="28" VerticalAlignment="Top" Width="51" Content="网  点：" Margin="0,0,0,-2" VerticalContentAlignment="Stretch" />
-                        <TextBox  Height="28" VerticalAlignment="Top" Width="120" Text="{m:Exp Str=LoginUser.f_parentname}" IsReadOnly="True" Margin="0,0,0,-2"/>
+                        <TextBox  Height="28" VerticalAlignment="Top" Width="149" Text="{m:Exp Str=LoginUser.f_parentname}" IsReadOnly="True" Margin="0"/>
 
                         <StackPanel  DataContext="{m:Exp Str=selstate}" Orientation="Horizontal" HorizontalAlignment="Right">
                             <TextBlock TextWrapping="Wrap" Text="退押金金额："  Margin="300,0,0,20" Height="25" TextAlignment="Right"  />
@@ -201,7 +205,7 @@
                     </toolkit:DockPanel>-->
 
                     <c:CustomDataGrid x:Name="daninfos"    toolkit:DockPanel.Dock="Top"  Margin="0,0,0,3"   IsReadOnly="True"
-								AutoGenerateColumns="False" Width="Auto" Background="{x:Null}" Height="710" >
+								AutoGenerateColumns="False" Width="Auto" Background="{x:Null}" Height="580" >
                         <!--
         					PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames=","-->
                         <a:Data.Items>
@@ -216,6 +220,7 @@
                             <sdk:DataGridTextColumn Header="地址" Binding="{Binding f_address}" d:IsLocked="True" Width="160"/>
                             <sdk:DataGridTextColumn Header="小区" Binding="{Binding f_districtname}" d:IsLocked="True" Width="*"/>
                             <sdk:DataGridTextColumn Header="原有结余" Binding="{Binding f_zhye}" Width="80"/>
+                            <sdk:DataGridTextColumn Header="原总缴费金额" Binding="{Binding f_jbzyqje}" Width="80"/>
                             <sdk:DataGridTemplateColumn Header="退押金金额">
                                 <sdk:DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
@@ -233,6 +238,17 @@
                                         <TextBox Text="{m:Bind Path=f_xyzhye}"  IsReadOnly="True">
                                             <a:Data.Prop>
                                                 <o:PropertySetter PropertyName="f_xyzhye" NoDependValue="{m:Exp Str=selstate.f_tuiyajin+data.f_zhye}"/>
+                                            </a:Data.Prop>
+                                        </TextBox>
+                                    </DataTemplate>
+                                </sdk:DataGridTemplateColumn.CellTemplate>
+                            </sdk:DataGridTemplateColumn>
+                            <sdk:DataGridTemplateColumn Header="退还押金后总缴费金额">
+                                <sdk:DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBox Text="{m:Bind Path=f_xyjbzyqje}"  IsReadOnly="True">
+                                            <a:Data.Prop>
+                                                <o:PropertySetter PropertyName="f_xyjbzyqje" NoDependValue="{m:Exp Str=selstate.f_tuiyajin+data.f_jbzyqje}"/>
                                             </a:Data.Prop>
                                         </TextBox>
                                     </DataTemplate>

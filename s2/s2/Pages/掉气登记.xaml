@@ -27,11 +27,12 @@
                 <o:PropertySetter PropertyName="f_addgastype" Default="掉气补气"/>
                 <o:PropertySetter PropertyName="f_comtype" Default="天然气公司"/>
             </o:GeneralObject>
-            <!--卡对象-->
+            <!--卡对象  Gas="{m:Exp Str=card\=>Writing!\=null:userfiles.f_finallygas\,null}"-->
             <oo:NewGeneralICCard Name="card"   
 		 CanSellGas="{m:Exp Str='SaveAction.State=>Completed==$End$ and fillgas.f_initcardsellgas!=$补卡$' }"
 		 CanRewriteCard="{m:Exp Str='SaveAction.State=>Completed==$End$ and fillgas.f_initcardsellgas==$补卡$'}"
-		 Gas="{m:Exp Str=card\=>Writing!\=null:userfiles.f_finallygas\,null}"
+		 
+                Gas="{m:Exp Str=apply.DataContext.f_cmaddgas}"
 		 BuyTimes="{m:Exp Str=userfiles.f_times.ToInt()}" 
 		 Klx="{m:Exp Str='userfiles != null\:userfiles.klx\,null'}"		
 		 Kzt="0"
@@ -374,10 +375,13 @@
             			<a:Data.Prop>
             				<o:PropertySetter PropertyName="f_oldcurrentbase" NotNull="True"/>
             			</a:Data.Prop>
-            		</TextBox>-->
+            		</TextBox>
+                            
+                            
+                            -->
                         <TextBox Text="{m:Bind Path=f_cmaddgas}" IsReadOnly="False" Grid.Column="5" Margin="0" Grid.Row="5" TextWrapping="Wrap" VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto">
                             <a:Data.Prop>
-                                <o:PropertySetter PropertyName="f_cmaddgas" Value="{m:Exp Str=userfiles.f_finallygas.ToString()}"  NotNull="True"/>
+                                <o:PropertySetter PropertyName="f_cmaddgas"  Value="{m:Exp Str=userfiles.f_finallygas.ToString()}"  NotNull="True"/>
                             </a:Data.Prop>
                         </TextBox>
                         <TextBox Text="{m:Bind Path=f_cnote}" Grid.ColumnSpan="5" Grid.Column="1" Margin="0,1" Grid.Row="16" TextWrapping="Wrap" VerticalAlignment="Stretch" >

@@ -283,5 +283,7 @@
 		<property name="f_fanpandate" type="string"/>
 		<!--补收费记录-->
 		<property name="f_bsfjl" type="string"/>
+		
+		<property name="f_jbzyqje" type="double"/>
 	</class>
 </hibernate-mapping>

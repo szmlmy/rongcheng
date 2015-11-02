@@ -14,12 +14,14 @@
 		<property name="f_username" type="string"/>
 	    <!--转出楼号-->
 		<property name="f_cusDom" type="string"/>
-		<!--转出门牌号-->
+		<!--转出小区-->
 		<property name="f_apartment" type="string"/>
 		<!--开户日期-->
 		<property name="f_dateofopening"  type="date"/>
-	
-	
+	<!--转出地址-->
+		<property name="f_address" type="string"/>
+	<!--转出卡号-->
+		<property name="f_cardid" type="string"/>
 	
 		<!--转出表号-->
 		<property name="f_meternumber" type="string"/>
@@ -69,11 +71,13 @@
 		<property name="f_inarea" type="string"/>
 		<!--转入楼号-->
 		<property name="f_incusdom" type="string"/>
-		<!--转入门牌号-->
+		<!--转入小区-->
 		<property name="f_inapartment" type="string"/>
+		<!--转入地址-->
+		<property name="f_zraddress" type="string"/>
 		
-		
-		
+			<!--转入卡号-->
+		<property name="f_zrcardid" type="string"/>
 		<!--转入表号-->
 		<property name="f_inwatchno" type="string"/>
 		<!--转入原累计购气量-->

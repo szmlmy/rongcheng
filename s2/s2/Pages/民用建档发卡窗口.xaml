@@ -242,7 +242,7 @@
                         <toolkit:DockPanel toolkit:DockPanel.Dock="Bottom"  >
                             <StackPanel Orientation="Horizontal" Width="170">
                                 <Button x:Name="save" Content="写  卡" Margin="5" IsEnabled="{m:Exp Str=!userfilego.HasErrors}"
-						Click="{m:Exp Str=userfile1.f_beginfee\=userfilego.f_beginfee;userfilego.f_times \= userfilego.f_times+1;userfile1.f_times\=userfilego.f_times.ToInt();sellgasobj.f_times\=userfilego.f_times.ToInt();sellgasobj.f_deliverydate\=userfilego.f_deliverydate;sellgasobj.f_deliverytime\=userfilego.f_deliverytime;sellgasobj.f_metergasnums\=userfilego.f_metergasnums;sellgasobj.f_cumulativepurchase\=userfilego.f_cumulativepurchase;userfile1.f_metergasnums\=userfilego.f_metergasnums;userfile1.f_cumulativepurchase\=userfilego.f_cumulativepurchase;userfile1.f_finabuygasdate\=userfilego.f_deliverydate;userfile1.f_dateofopening\=userfilego.f_givecarddate;userfile1.f_givecarddate\=userfilego.f_givecarddate;sellgasobj.f_payfeevalid\=$有效$;sellgasobj.f_comtype\=$天然气公司$;sellgasobj.f_payfeetype\=userfilego.f_payfeetype;userfile1.f_whethergivecard\=$已发$;userfile1.f_whethergivepassbook\=$已发$;sellgasobj.f_payment\=userfilego.f_payment;sellgasobj.f_sgoperator\=userfilego.f_sgoperator;sellgasobj.f_sgnetwork\=userfilego.f_sgnetwork;sellgasobj.f_filiale\=userfilego.f_filiale;userfile1.f_watchinstalldate\=userfilego.f_watchinstalldate;card.Sqrq\=userfilego.f_deliverydate.ToString($yyyyMMdd$);fpinfosobj.f_fapiaotype\=$发卡售气$;fpinfosobj.f_fapiaostatue\=$已用$;fpinfosobj.f_sgnetwork\=fakaobj.DataContext.f_sgnetwork;fpinfosobj.f_fapiaodate\=fakaobj.DataContext.f_deliverydate;cardid1.Load()}" Width="50" />
+						Click="{m:Exp Str=userfile1.f_beginfee\=userfilego.f_beginfee;userfilego.f_times \= userfilego.f_times+1;userfile1.f_times\=userfilego.f_times.ToInt();sellgasobj.f_times\=userfilego.f_times.ToInt();sellgasobj.f_deliverydate\=userfilego.f_deliverydate;sellgasobj.f_deliverytime\=userfilego.f_deliverytime;sellgasobj.f_metergasnums\=userfilego.f_metergasnums;sellgasobj.f_cumulativepurchase\=userfilego.f_cumulativepurchase;userfile1.f_metergasnums\=userfilego.f_metergasnums;userfile1.f_cumulativepurchase\=userfilego.f_cumulativepurchase;userfile1.f_finabuygasdate\=userfilego.f_deliverydate;userfile1.f_dateofopening\=userfilego.f_givecarddate;userfile1.f_givecarddate\=userfilego.f_givecarddate;sellgasobj.f_payfeevalid\=$有效$;sellgasobj.f_comtype\=$天然气公司$;sellgasobj.f_payfeetype\=userfilego.f_payfeetype;userfile1.f_whethergivecard\=$已发$;userfile1.f_whethergivepassbook\=$已发$;sellgasobj.f_payment\=userfilego.f_payment;sellgasobj.f_sgoperator\=userfilego.f_sgoperator;sellgasobj.f_sgnetwork\=userfilego.f_sgnetwork;sellgasobj.f_filiale\=userfilego.f_filiale;userfile1.f_watchinstalldate\=userfilego.f_watchinstalldate;card.Sqrq\=userfilego.f_deliverydate.ToString($yyyyMMdd$);fpinfosobj.f_fapiaotype\=$发卡售气$;fpinfosobj.f_fapiaostatue\=$已用$;fpinfosobj.f_sgnetwork\=fakaobj.DataContext.f_sgnetwork;fpinfosobj.f_fapiaodate\=fakaobj.DataContext.f_deliverydate;submit.IsShow\=True}" Width="50" />
                                 <Button Content="关 闭" Margin="5" Click="{m:Exp Str=fakachild.Close()}" Width="50">
                                 </Button>
                             </StackPanel>
@@ -656,9 +656,9 @@
                                 </a:Data.Prop>
                             </ComboBox>
                             <TextBlock Grid.Column="2" Margin="0" Grid.Row="13" TextWrapping="Wrap" TextAlignment="Right" Height="25"><Run Text="购气"/><Run Text="时间"/><Run Text="："/></TextBlock>
-                            <toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="3" Margin="0,3,0,2" Grid.Row="13"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
+                            <toolkit:TimePicker Value="{m:Bind Path=f_deliverytime}" IsEnabled="False" Grid.Column="3" Margin="0" Grid.Row="13"   IsDropDownOpen="False"  VerticalAlignment="Stretch" Height="25" HorizontalAlignment="Stretch" Width="Auto" Grid.ColumnSpan="1" >
                                 <a:Data.Prop>
-                                    <o:PropertySetter PropertyName="f_deliverytime" NoDependValue="{m:Exp Str=SecRefresh\=&gt;TimeEvent!\=null:SysTime.Now\,$$}"/>
+                                    <o:PropertySetter PropertyName="f_deliverytime" Value="{m:Exp Str=SecRefresh\=&gt;TimeEvent!\=null:SysTime.Now\,$$}"/>
                                 </a:Data.Prop>
                             </toolkit:TimePicker>
                             <TextBox Text="{m:Bind Path=f_cardidjia}" Grid.Column="3" Margin="0,3,1,2" Grid.Row="4" TextWrapping="Wrap" IsReadOnly="True" Height="25" HorizontalAlignment="Right" Width="1" >
@@ -1041,5 +1041,7 @@ HorizontalAlignment="Stretch" Margin="114,96,919,0"  Width="Auto" Height="20" Ve
         <c:MessageTipObj Tip="{m:Exp Str=$制卡失败，请重试！如果继续失败，请转维修班处理。错误内容：\{card.Error\=\=null:$$\,card.Error\}$}" IsShow="{m:Exp Str=RollbackAction.State\=\=$End}"/>
         <c:MessageTipObj Tip="{m:Exp Str=$连接服务器失败，请重试！如果继续失败，请联系系统管理员。$}" IsShow="{m:Exp Str=FaKaAction.State\=\=$Error}"/>
         <c:MessageTipObj Tip="{m:Exp Str=$自动冲正失败。库里有记录，卡上无气量，请转维修班处理。$}" IsShow="{m:Exp Str=RollbackAction.State\=\=$Error}"/>
+        <c:MessageTipObj Name="submit" Tip="{m:Exp Str=$是否正确插入\{fakaobj.DataContext.f_gaswatchbrand\}的新卡$}" OK="{m:Exp Str=cardid1.Load()}"/>
+
     </Grid>
 </c:CustomChildWindow>

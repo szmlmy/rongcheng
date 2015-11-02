@@ -18,19 +18,19 @@
     <Grid x:Name="LayoutRoot">
         <m:ResourceLoad Margin="0,0,-12,0">
 
-            
+
             <o:ObjectList Name="fgslist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='分公司' order by id"/>
             <!--总公司名称-->
             <o:GeneralObject Name="zonggongsi" EntityType="t_singlevalue" WebClientInfo="{StaticResource dbclient}" 
 		  		Path="{m:Exp Str=$one/from t_singlevalue where name \= \'总公司名称\'}"   >
             </o:GeneralObject>
 
+
+
             
-
-
             <!--更新结余-->
             <b:HQLAction Name="UpdateUser" WebClientInfo="{StaticResource dbclient}" 
-				HQL="{m:Exp Str=$update t_userfiles set f_zhye \= \{pipeline.DataContext.f_xyzhye\}\ where f_userid \= \'\{pipelines.SelectedItem.f_userid\}\'}"/>
+				HQL="{m:Exp Str=$update t_userfiles set f_zhye \= \{pipeline.DataContext.f_xyzhye\}\,f_jbzyqje \= \{pipeline.DataContext.f_xyjbzyqje\}\ where f_userid \= \'\{pipelines.SelectedItem.f_userid\}\'}"/>
             <!--更新结余-->
             <b:HQLAction Name="Updateyajin" WebClientInfo="{StaticResource dbclient}" 
 				HQL="{m:Exp Str=$update t_userfiles set f_yajin \= \'押金已退\' where f_userid \= \'\{pipelines.SelectedItem.f_userid\}\'}"/>
@@ -107,9 +107,10 @@
                     </toolkit:DockPanel>
                     <sdk:DataGrid x:Name="pipelines" Margin="0,0,0,8"  
         			AutoGenerateColumns="False"  IsReadOnly="True">
+                        <!-- and f_yytdate ^ \'2014-09-17\'-->
                         <a:Data.Items>
                             <o:PagedObjectList x:Name="pipelineslist" WebClientInfo="{StaticResource dbclient}"
-        					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\} and f_userstate\=\'正常\' and f_gasmeterstyle\=\'机表\'  and f_yajin is null and f_yytdate ^ \'2014-09-17\'}"
+        					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\} and f_userstate\=\'正常\' and f_gasmeterstyle\=\'机表\'  and f_yajin is null}"
         					IsOld="{m:Exp Str=SaveAction.State\=\=$End$ or pipeline.DataContext.State\=\=$End$}"
         					PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames=","/>
                         </a:Data.Items>
@@ -258,7 +259,7 @@
 
 
 
-                        
+
 
                         <TextBlock Margin="0,6" Grid.Row="13" TextWrapping="Wrap" Text="网　　点：" TextAlignment="Right" Height="25"/>
                         <TextBox Text="{m:Bind Path=f_sgnetwork}" Grid.Column="1" Margin="0,6" Grid.Row="13" TextWrapping="Wrap" IsReadOnly="True" VerticalAlignment="Stretch" Height="25">
@@ -327,6 +328,19 @@
                         <TextBox Text="{m:Bind Path=f_beizhu}" Grid.Column="1" FontWeight="Bold"  Margin="0,0,1,0" Grid.Row="12"  Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.ColumnSpan="3" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_beizhu"  NotNull="True"/>
+                            </a:Data.Prop>
+                        </TextBox>
+                        <TextBlock Text="现有缴费总金额：" Margin="0,8,0,4" Grid.Row="6" Grid.Column="2" TextWrapping="Wrap" TextAlignment="Right" Height="25"/>
+                        <TextBlock Text="原有缴费总金额：" Margin="0,9,0,3" Grid.Row="6" TextWrapping="Wrap" TextAlignment="Right" Height="25"/>
+                        <TextBox Text="{m:Bind Path=f_jbzyqje}" Grid.Column="1" Margin="0,9,0,3" Grid.Row="6" IsReadOnly="True" Height="25" VerticalAlignment="Stretch" Grid.RowSpan="1" RenderTransformOrigin="0.5,0.5" >
+
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_jbzyqje"  NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_jbzyqje}" />
+                            </a:Data.Prop>
+                        </TextBox>
+                        <TextBox Text="{m:Bind Path=f_xyjbzyqje}" Grid.Column="3" FontWeight="Bold" Foreground="Red" Margin="0,8,0,0" Grid.Row="6" IsReadOnly="True" Height="Auto" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.ColumnSpan="1" >
+                            <a:Data.Prop>
+                                <o:PropertySetter PropertyName="f_xyjbzyqje" NoDependValue="{m:Exp Str=pipelines.SelectedItem.f_jbzyqje+pipeline.DataContext.f_tuiyajin}" />
                             </a:Data.Prop>
                         </TextBox>
 

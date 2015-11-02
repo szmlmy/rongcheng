@@ -103,8 +103,12 @@
                         <sdk:DataGridTextColumn Header="地址" Binding="{Binding f_address}" d:IsLocked="True"/>
                         <sdk:DataGridTextColumn Header="小区" Binding="{Binding f_districtname}" d:IsLocked="True" />
                         <sdk:DataGridTextColumn Header="原有结余" Binding="{Binding f_zhye}" />
+                        <sdk:DataGridTextColumn Header="原有总缴费金额" Binding="{Binding f_jbzyqje}" />
                         <sdk:DataGridTextColumn Header="退还押金金额" Binding="{Binding f_tuiyajin}" />
                         <sdk:DataGridTextColumn Header="退还押金后结余" Binding="{Binding f_xyzhye}" />
+                        <sdk:DataGridTextColumn Header="退还押金后总缴费金额" Binding="{Binding f_xyjbzyqje}" />
+                        
+                        <sdk:DataGridTextColumn Header="原有总缴费金额" Binding="{Binding f_jbzyqje}" />
                         <sdk:DataGridTextColumn Header="操作人" Binding="{Binding f_sgoperator}" />
                         <sdk:DataGridTextColumn Header="操作时间" Binding="{Binding f_deliverydate}" />
                         <sdk:DataGridTextColumn Header="网点" Binding="{Binding f_sgnetwork}" />

@@ -110,7 +110,7 @@
         				<o:PagedObjectList x:Name="pipelineslist" WebClientInfo="{StaticResource dbclient}"
         					Path="{m:Exp Str=$from t_userfiles where \{pipelinesearch.DataContext.Condition\} and f_userstate\=\'正常\' and f_filiale \=\'\{LoginUser.f_fengongsi\}\'}"
         					IsOld="{m:Exp Str=SaveAction.State\=\=$End$ or pipeline.DataContext.State\=\=$End$}"
-        					PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames="id"/>
+        					PageIndex="{m:Exp Str=pager.PageIndex}" PageSize="{m:Exp Str=pager.PageSize}" SumNames=","/>
         			</a:Data.Items>
 					
         			<sdk:DataGrid.Columns>
@@ -200,7 +200,7 @@
                             <TextBlock Margin="0,6" Grid.Row="7" TextWrapping="Wrap" Text="部      门：" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             <TextBlock Grid.Column="2" Margin="0,6" Grid.Row="7" TextWrapping="Wrap" Text="操 作 人：" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                             <TextBlock Margin="0,6" Grid.Row="7" TextWrapping="Wrap" Text="操作日期：" HorizontalAlignment="Right" Grid.Column="4" d:LayoutOverrides="Height, GridBox"/>
-                            <TextBox Text="{m:Bind Path=f_userid}" Grid.Column="1" Margin="0,6" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                            <TextBox IsReadOnly="True" Text="{m:Bind Path=f_userid}" Grid.Column="1" Margin="0,6" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                                 <a:Data.Prop>
                                     <o:PropertySetter PropertyName="f_userid" Value="{m:Exp Str=userfiles.f_userid\=>Completed}" />
                                 </a:Data.Prop>
@@ -266,7 +266,7 @@
             					Default="{m:Exp Str=SysTime.Now}"/>
                                 </a:Data.Prop>
                             </sdk:DatePicker>
-                            <Button Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Background="#FF2F628D"/>
+                            <Button Visibility="Collapsed" Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="10,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left" Width="50" Background="#FF2F628D"/>
                             <!--隐藏域-->
                             <!--卡号-->
                             <TextBox Text="{m:Bind Path=f_cardid}" Visibility="Collapsed" Margin="0,6"  TextWrapping="Wrap" VerticalAlignment="Center" IsReadOnly="True">

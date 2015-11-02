@@ -34,6 +34,27 @@
 		<property name="f_zhye" type="double"/>
 <!--现有结余-->
 		<property name="f_xyzhye" type="double"/>
+		
+		<!--机表用户原总缴费金额-->
+		<property name="f_jbzyqje" type="double"/>
+<!--现总缴费金额-->
+		<property name="f_xyjbzyqje" type="double"/>
+		
+		<!--气表类型-->
+		<property name="f_gasmeterstyle" type="string"/>
+		
+		
+		
+		
+		<!--转入地址-->
+		<property name="f_zraddress" type="string"/>
+		
+		
+		
+		
+		
+		
+		
 <!--退押金-->
 		<property name="f_tuiyajin" type="double"/>
 <!--备注-->

@@ -102,6 +102,7 @@
                         <sdk:DataGrid.Columns>
                             <sdk:DataGridTextColumn Header="序号" Binding="{Binding Index}"/>
                             <sdk:DataGridTextColumn Header="用户编号" Binding="{Binding f_userid}"/>
+                            <sdk:DataGridTextColumn Header="用户姓名" Binding="{Binding f_username}"/>
                             <sdk:DataGridTextColumn Header="用户地址" Binding="{Binding f_address}"/>
                             <sdk:DataGridTextColumn Header="部门" Binding="{Binding f_parentname}" d:IsLocked="True"/>
                             <sdk:DataGridTextColumn Header="停用人" Binding="{Binding f_soperator}"/>
@@ -174,7 +175,7 @@
                         <TextBlock Grid.Column="2" Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="操 作 人：" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBlock Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="部      门：" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <TextBlock Grid.Column="4" Margin="0" Grid.Row="7" TextWrapping="Wrap" Text="操作日期：" HorizontalAlignment="Right" VerticalAlignment="Center"/>
-                        <TextBox Text="{m:Bind Path=f_userid}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,6" TextWrapping="Wrap" VerticalAlignment="Stretch" >
+                        <TextBox IsReadOnly="True" Text="{m:Bind Path=f_userid}" Grid.Column="1" HorizontalAlignment="Stretch" Margin="0,6" TextWrapping="Wrap" VerticalAlignment="Stretch" >
                             <a:Data.Prop>
                                 <o:PropertySetter PropertyName="f_userid" Value="{m:Exp Str=userfiles.f_userid\=>Completed}" />
                             </a:Data.Prop>
@@ -248,7 +249,7 @@
             					Default="{m:Exp Str=SysTime.Now}"/>
                             </a:Data.Prop>
                         </sdk:DatePicker>
-                        <Button Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="0" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                        <Button Visibility="Collapsed" Content="读卡" Click="{m:Exp Str=card.ReadCard()}" Grid.Column="2" Margin="0" Width="50" HorizontalAlignment="Right" VerticalAlignment="Center"/>
                         <!--隐藏域-->
                         <!--卡号-->
                         <TextBox Text="{m:Bind Path=f_cardid}" Visibility="Collapsed" Margin="0,6"  TextWrapping="Wrap" VerticalAlignment="Center" IsReadOnly="True">

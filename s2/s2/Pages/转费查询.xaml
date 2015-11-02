@@ -159,18 +159,21 @@
 									<sdk:DataGridTextColumn Header="序号" Binding="{Binding Index}" />
 									<sdk:DataGridTextColumn Header="转出用户ID号" Binding="{Binding f_userid}" />
 			            			<sdk:DataGridTextColumn Header="转出用户/单位名称" Binding="{Binding f_username}"/>
-                            <!--<sdk:DataGridTextColumn Header="转出楼号" Binding="{Binding f_cusDom}" />
-									<sdk:DataGridTextColumn Header="转出门牌号" Binding="{Binding f_apartment}"/>
+                            <sdk:DataGridTextColumn Header="转出卡号" Binding="{Binding f_cardid}" />
+                            <sdk:DataGridTextColumn Header="转出地址" Binding="{Binding f_address}" />
+                            <!--<sdk:DataGridTextColumn Header="转出门牌号" Binding="{Binding f_apartment}"/>
 									<sdk:DataGridTextColumn Header="转出表号" Binding="{Binding f_meternumber}"/>
-                                    <sdk:DataGridTextColumn Header="转出气价" Binding="{Binding f_gasprice}" />-->
-									<sdk:DataGridTextColumn Header="开户日期" Binding="{Binding f_dateofopening,StringFormat=yyyy-MM-dd}"/>
+                                    <sdk:DataGridTextColumn Header="转出气价" Binding="{Binding f_gasprice}" />
+                                    <sdk:DataGridTextColumn Header="开户日期" Binding="{Binding f_dateofopening,StringFormat=yyyy-MM-dd}"/>-->
+									
 									<sdk:DataGridTextColumn Header="余气量" Binding="{Binding f_remaingas}"/>
                             <sdk:DataGridTextColumn Header="转出前累计购气量" Binding="{Binding f_allgasnum}"/>
                             <sdk:DataGridTextColumn Header="转出后累计购气量" Binding="{Binding f_watchreading}"/>
-                            
+
 
                             <sdk:DataGridTextColumn Header="转出/转入气量" Binding="{Binding f_outgasno}" />
-									<sdk:DataGridTextColumn Header="转出金额" Binding="{Binding f_outmoney}" />
+                            <sdk:DataGridTextColumn Header="转出用户转出前金额" Binding="{Binding f_yhju}" />
+                            <sdk:DataGridTextColumn Header="转出金额" Binding="{Binding f_outmoney}" />
 
                             <!--	<sdk:DataGridTextColumn Header="转出前维修费截止日期" Binding="{Binding f_beginfee,StringFormat=yyyy-MM-dd}" />
 									<sdk:DataGridTextColumn Header="是否转出维修费" Binding="{Binding f_whfout}" />
@@ -178,8 +181,9 @@
 									<sdk:DataGridTextColumn Header="转出后维修费截止日期" Binding="{Binding f_outbeginfee,StringFormat=yyyy-MM-dd}" />-->
 									<sdk:DataGridTextColumn Header="转入用户ID号" Binding="{Binding f_inid}" />
 									<sdk:DataGridTextColumn Header="转入用户/单位名称" Binding="{Binding f_inarea}" />
-                            <!--<sdk:DataGridTextColumn Header="转入楼号" Binding="{Binding f_incusdom}" />
-									<sdk:DataGridTextColumn Header="转入门牌号" Binding="{Binding f_inapartment}" />
+                            <sdk:DataGridTextColumn Header="转入卡号" Binding="{Binding f_zrcardid}" />
+                            <sdk:DataGridTextColumn Header="转入地址" Binding="{Binding f_zraddress}" />
+                            <!--<sdk:DataGridTextColumn Header="转入门牌号" Binding="{Binding f_inapartment}" />
 									<sdk:DataGridTextColumn Header="转入表号" Binding="{Binding f_inwatchno}" />
 									<sdk:DataGridTextColumn Header="转入气价" Binding="{Binding f_newgasprice}" />-->
 									<sdk:DataGridTextColumn Header="转入原累计购气量" Binding="{Binding f_oldsumgasno}" />
@@ -187,13 +191,13 @@
                             <sdk:DataGridTextColumn Header="转入前金额" Binding="{Binding  f_zyryhjy}" />
                             <sdk:DataGridTextColumn Header="转入后金额" Binding="{Binding f_newmoney}" />
                             <!--<sdk:DataGridTextColumn Header="转入前维修费截止日期" Binding="{Binding f_inbeginfee,StringFormat=yyyy-MM-dd}" />
-									<sdk:DataGridTextColumn Header="转入后维修费截止日期" Binding="{Binding f_innewbeginfee,StringFormat=yyyy-MM-dd}" />-->
+									<sdk:DataGridTextColumn Header="转入后维修费截止日期" Binding="{Binding f_innewbeginfee,StringFormat=yyyy-MM-dd}" />
+                            <sdk:DataGridTextColumn Header="备注" Binding="{Binding f_beizhu}"/>
+                            <sdk:DataGridTextColumn Header="分公司" Binding="{Binding f_filiale}" />-->
 									<sdk:DataGridTextColumn Header="转费日期" Binding="{Binding f_outfeetime,StringFormat=yyyy-MM-dd}"/>
                             <sdk:DataGridTextColumn Header="转出原因" Binding="{Binding f_outfeereason}" />
-                                    <sdk:DataGridTextColumn Header="备注" Binding="{Binding f_beizhu}"/>
-									<sdk:DataGridTextColumn Header="操作员" Binding="{Binding f_sgoperator}" />
+                            <sdk:DataGridTextColumn Header="操作员" Binding="{Binding f_sgoperator}" />
 									<sdk:DataGridTextColumn Header="网点" Binding="{Binding f_sgnetwork}" />
-									<sdk:DataGridTextColumn Header="分公司" Binding="{Binding f_filiale}" />
 								</sdk:DataGrid.Columns>
 							</sdk:DataGrid>
 					
@@ -202,8 +206,9 @@
 				</Grid>
 				<c:Excel x:Name="toExcel" HQL="{m:Exp Str=$\{daninfos.ItemsSource.Path\}}" 
 				Completed="{m:Exp Str=downLoad.Down()}"
-				Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/f_userid:转出用户ID号|f_username:转出用户单位名称|f_cusDom:转出楼号|f_apartment:转出门牌号|f_meternumber:转出表号|f_dateofopening:开户日期|f_remaingas:余气量|f_allgasnum:累计购气量|f_gasprice:转出气价|f_outgasno:转入转出气量|f_outmoney:转出金额|f_beginfee:转出前维修费截止日期|f_whfout:是否转出维修费|f_canoutwxf:可转出月数|f_outbeginfee:转出后维修费截止日期|f_inid:转入用户ID|f_inarea:转入用户单位名称|f_incusdom:转入楼号|f_inapartment:转入门牌号|f_inwatchno:转入表号|f_oldsumgasno:转入原累计购气量|f_newsumgasno:转入现累计购气量|f_newgasprice:转入气价|f_newmoney:转入金额|f_inbeginfee:转入前维修费截止日期|f_innewbeginfee:转入后维修费截止日期|f_outfeetime:转费日期|f_movepoundage:转气手续费|f_switchin:付手续费方|f_sgoperator:操作员$}"/>
-				<c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}"></c:DownLoad>
+				Path="{m:Exp Str=$\{server.BaseAddress\}/excel/\{daninfos.ItemsSource.Count\}/f_userid:转出用户ID号|f_username:转出用户单位名称|f_cardid:转出卡号|f_address:转出地址|f_allgasnum:转出前累计购气量|f_watchreading:转出后累计购气量|f_outgasno:转出转入气量|f_yhju:转出用户转出前金额|f_outmoney:转出金额|f_inid:转入用户ID号|f_inarea:转入用户单位名称|f_zrcardid:转入卡号|f_oldsumgasno:转入原累计购气量|f_newsumgasno:转入现累计购气量|f_zyryhjy:转入前金额|f_newmoney:转入后金额|f_outfeetime:转费日期|f_outfeereason:转费日期|f_sgoperator:操作员|f_sgnetwork:网点$}"/>
+
+        <c:DownLoad x:Name="downLoad" Path="{m:Exp Str=$\{server.BaseAddress\}/file/\{toExcel.FileName\}}"></c:DownLoad>
 
 			<!--/sdk:TabItem>
 		</sdk:TabControl-->

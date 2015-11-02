@@ -172,7 +172,7 @@ else 0
 end)weianzhuang from 
 (select f_jisuannum\,f_districtname\,f_apartment\,f_cusDom\,f_cusDy\,f_cusFloor\,f_districtname+f_cusDom +f_cusDy+f_cusFloor+f_apartment   te from t_gasaddress) a1
 left join 
-(select f_username\,f_cardid\,f_userid\,f_gaswatchbrand\,f_metertype\,f_districtname+f_cusDom+f_cusDy+f_cusFloor+f_apartment    te from   t_userfiles1) a2
+(select f_username\,f_cardid\,f_userid\,f_gaswatchbrand\,f_metertype\,f_districtname+f_cusDom+f_cusDy+f_cusFloor+f_apartment    te from   t_userfiles) a2
  on a1.te\=a2.te 
  where \{daninfosearch.DataContext.Condition\}$}"
 									HQL="{m:Exp Str=$select  a1.f_jisuannum\,a1.te\,a1.f_districtname\,a1.f_apartment\,a1.f_cusDom\,a1.f_cusDy\,a1.f_cusFloor\,
@@ -191,7 +191,7 @@ else 0
 end)weianzhuang from 
 (select f_jisuannum\,f_districtname\,f_apartment\,f_cusDom\,f_cusDy\,f_cusFloor\,f_districtname+f_cusDom +f_cusDy+f_cusFloor+f_apartment   te from t_gasaddress) a1
 left join 
-(select f_username\,f_cardid\,f_userid\,f_gaswatchbrand\,f_metertype\,f_districtname+f_cusDom+f_cusDy+f_cusFloor+f_apartment    te from   t_userfiles1) a2
+(select f_username\,f_cardid\,f_userid\,f_gaswatchbrand\,f_metertype\,f_districtname+f_cusDom+f_cusDy+f_cusFloor+f_apartment    te from   t_userfiles) a2
  on a1.te\=a2.te 
  where \{daninfosearch.DataContext.Condition\}$}"
  
