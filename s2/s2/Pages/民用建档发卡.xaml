@@ -22,8 +22,10 @@
             <o:ChildWindowObj Name="openchild" CWName="/Pages/民用建档发卡窗口" />
             <!--气表品牌列表-->
             <o:ObjectList Name="pinpailist" WebClientInfo="{StaticResource dbclient}" Path="{m:Exp Str=$from qibiao as qibiao left join fetch qibiao.qbnumber}"/>
-            <!--用气性质列表-->
-            <o:ObjectList Name="usegaslist" WebClientInfo="{StaticResource dbclient}" Path="{m:Exp Str=$from gasproper as gasproper left join fetch gasproper.pricetype where f_gasproperties\=\'民用\'}"/>
+            <!--用气性质列表
+             <o:ObjectList Name="usegaslist" WebClientInfo="{StaticResource dbclient}" Path="{m:Exp Str=$from gasproper as gasproper left join fetch gasproper.pricetype where f_gasproperties\=\'民用\'}"/>
+            -->
+           <o:ObjectList Name="usegaslist" WebClientInfo="{StaticResource dbclient}" Path="{m:Exp Str=$from gasproper as gasproper left join fetch gasproper.pricetype where f_gasproperties\!\=\'民用用气\'}"/>
             <o:ObjectList Name="chaobiaoyuanlist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='抄表员'"/>
             <o:ObjectList Name="jiaofeilist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='交费类型'"/>
             <o:ObjectList Name="usertypelist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='用户类型查询用'"/>
@@ -32,10 +34,10 @@
             <!--打开子窗口对象-->
             <o:ChildWindowObj Name="openkafei" CWName="/Pages/高级管理员登录" />
             <o:ChildWindowObj Name="openxiangou" CWName="/Pages/管理员登录" />
-            <!--机表对象-->
+            <!--机表对象   print.State\=\=$End$  or SaveAction.State\=\=$End$ -->
             <o:GeneralObject Name="userfilego" WebClientInfo="{StaticResource dbclient}" 
 					EntityType="t_userfiles"	
-					IsInit="{m:Exp Str=print.State\=\=$End$  or SaveFaKaAction.State\=\=$End$}">
+					IsInit="{m:Exp Str=print.State\=\=$End$   or SaveFaKaAction.State\=\=$End$}">
 
                 <o:PropertySetter PropertyName="f_comtype" Default="天然气公司"/>
                 <o:PropertySetter PropertyName="f_times" Default="0"/>
@@ -61,7 +63,7 @@
                 <o:PropertySetter PropertyName="f_kaihuql" Value="{m:Exp Str=areafiles.SelectedItem.f_accountVolume}"/>
                 <o:PropertySetter PropertyName="f_whethergivecard" Default="未发"  />
                 <!--o:PropertySetter PropertyName="f_userinfoid"  Default="{m:Exp Str=userinfogo}" /-->
-                <o:PropertySetter PropertyName="f_jfbh" Default="{m:Exp Str=userfile.DataContext.f_gasmeterstyle\=\=$机表$:   $\{LoginUser.f_fengongsinum\}\{ksnumobj1.value.ToInt().Format($0|D6$)\}$\,null}"/>
+                <o:PropertySetter PropertyName="f_jfbh" Default="{m:Exp Str=userfile.DataContext.f_gasmeterstyle\=\=$机表$:userfile.DataContext.f_userid\,null}"/>
                 <o:PropertySetter PropertyName="f_bankname" Default="{m:Exp Str=userfile.DataContext.f_gasmeterstyle\=\=$机表$:$工行$\,null}"  />
 
 
@@ -85,19 +87,19 @@
             <!--小区列表-->
             <o:PagedObjectList Name="areafileslist" WebClientInfo="{StaticResource dbclient}"
 				Path="{m:Exp Str=$from t_area where \{areafilesearch.DataContext.Condition\}}"
-				IsOld="{m:Exp Str=print.State\=\=$End$  or SaveFaKaAction.State\=\=$End$}"
+				IsOld="{m:Exp Str=print.State\=\=$End$  or SaveAction.State\=\=$End$ or SaveFaKaAction.State\=\=$End$}"
 				SumNames=","
 				PageSize="{m:Exp Str=pager.PageSize}" PageIndex="{m:Exp Str=pager.PageIndex}"/>
             <!--地址列表-->
             <o:PagedObjectList Name="areafileslist2" WebClientInfo="{StaticResource dbclient}"
 				Path="{m:Exp Str=$from t_gasaddress where \{areafilesearch2.DataContext.Condition\}}"
-				IsOld="{m:Exp Str=print.State\=\=$End$  or SaveFaKaAction.State\=\=$End$}"
+				IsOld="{m:Exp Str=print.State\=\=$End$  or SaveAction.State\=\=$End$ or SaveFaKaAction.State\=\=$End$}"
 				SumNames=","
 				PageSize="{m:Exp Str=pager2.PageSize}" PageIndex="{m:Exp Str=pager2.PageIndex}"/>
             <!--小区对象areas.f_usernumber-->
             <o:GeneralObject Name="areas" EntityType="t_area" WebClientInfo="{StaticResource dbclient}"
                   Path="{m:Exp Str=$one/from t_area where id\=\'\{areafiles.SelectedItem.id\}\'}" 
-				  IsInit="{m:Exp Str=print.State\=\=$End$  or SaveFaKaAction.State\=\=$End$}"/>
+				  IsInit="{m:Exp Str=print.State\=\=$End$  or SaveAction.State\=\=$End$ or SaveFaKaAction.State\=\=$End$}"/>
             <o:ObjectList Name="zhengjianlist" WebClientInfo="{StaticResource dbclient}" Path="from paramvalue where param.name='证件类型'"/>
             <!--更新用气地址表已建档案-->
             <b:HQLAction Name="updategasad"  WebClientInfo="{StaticResource dbclient}" 
@@ -132,6 +134,10 @@
                 <b:CallMethodAction TargetObject="{m:Exp Str=userfile.DataContext}"    MethodName="Save"/>
                 <!--弹出发卡界面-->
                 <b:CallMethodAction TargetObject="{m:Exp Str=openchild}"    MethodName="Open"/>
+            </b:SyncActionFactory>
+            <b:SyncActionFactory Name="print"  CanSave="{m:Exp Str=SaveAction.State\=\=$End$}"  >
+                <b:CallMethodAction   TargetObject="{m:Exp Str=jfbhprint}"      MethodName="TipPrint" />
+
             </b:SyncActionFactory>
         </m:ResourceLoad>
         <Grid >
@@ -894,7 +900,7 @@
                                     <TextBlock Margin="0,8,26,0" TextWrapping="Wrap" Text="缴费编号" TextAlignment="Right"  Grid.Row="1"  HorizontalAlignment="Right" Grid.Column="2" Height="25" VerticalAlignment="Top" Width="52"/>
                                     <TextBox Text="{m:Bind Path=f_jfbh}"  Grid.Column="3" Margin="8,8,223,0" Grid.Row="1" TextWrapping="Wrap" Height="25" VerticalAlignment="Top" IsReadOnly="False" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto" d:LayoutOverrides="Height" >
                                         <a:Data.Prop>
-                                            <o:PropertySetter PropertyName="f_jfbh"   Value="{m:Exp Str=userfile.DataContext.f_gasmeterstyle\=\=$机表$:   $\{LoginUser.f_fengongsinum\}\{ksnumobj1.value.ToInt().Format($0|D6$)\}$\,null}"/>
+                                            <o:PropertySetter PropertyName="f_jfbh"   Value="{m:Exp Str=userfile.DataContext.f_userid}"/>
                                             </a:Data.Prop>
                                     </TextBox>
                                     <TextBox Text="{m:Bind Path=f_usermc}"  Grid.Column="3" Margin="8,8,223,0" Grid.Row="2" TextWrapping="Wrap" Height="25" VerticalAlignment="Top" IsReadOnly="False" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" Width="Auto" d:LayoutOverrides="Height" >
@@ -973,7 +979,7 @@ Margin="24,390.333,352.377,0" RenderTransformOrigin="0.5,0.5">
             <TextBlock Text="{m:Exp Str=SysTime.Now.ToString($yyyy$)}" Grid.Column="0"  HorizontalAlignment="Left" Margin="34,106,0,0" TextWrapping="Wrap" Width="55" Height="18" VerticalAlignment="Top"/>
             <TextBlock Text="{m:Exp Str=SysTime.Now.ToString($MM$)}"  HorizontalAlignment="Left" Margin="124,106,0,0" TextWrapping="Wrap" Width="25" Height="18" VerticalAlignment="Top"/>
             <TextBlock Text="{m:Exp Str=SysTime.Now.ToString($dd$)}"  HorizontalAlignment="Left" Margin="184,106,0,0" TextWrapping="Wrap" Width="25" Height="18" VerticalAlignment="Top"/>
-            <TextBlock Text="{m:Exp Str=$\{LoginUser.f_fengongsinum\}\{ksnumobj1.value.ToInt().Format($0|D6$)\}}" Margin="184,196,0,0" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" Grid.ColumnSpan="1" HorizontalAlignment="Left" Width="465"/>
+            <TextBlock Text="{m:Exp Str=userfile.DataContext.f_userid}" Margin="184,196,0,0" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" Grid.ColumnSpan="1" HorizontalAlignment="Left" Width="465"/>
             <Path Data="M17,186 L492.26941,186" Height="1" Stretch="Fill" Stroke="Black" StrokeThickness="1" UseLayoutRounding="False" VerticalAlignment="Top" 
             	Margin="24,237,352.377,0"/>
             <TextBlock Text="{m:Exp Str=userfile.DataContext.f_username}" Margin="184,246,0,0" TextWrapping="Wrap" Height="35" VerticalAlignment="Top" Grid.ColumnSpan="1" HorizontalAlignment="Left" Width="465" RenderTransformOrigin="0.483,2.171"/>
@@ -982,8 +988,9 @@ Margin="24,390.333,352.377,0" RenderTransformOrigin="0.5,0.5">
 
         </Grid>
 
-
-        <c:PrintObj Name="print" Message="是否打印代扣编号信息卡" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$ and userfile.DataContext.f_gasmeterstyle\=\=$机表$}" Area="{m:Res Key=aofengprint}" />
+        <!--  -->
+        <c:PrintObj Name="jfbhprint" Message="是否打印代扣编号信息卡"  Area="{m:Res Key=aofengprint}" />
+              
         <c:MessageTipObj  Name="savedone" Type="MessageBox" Tip="{m:Exp Str='$用户编号{userfile.DataContext.f_userid}的档案创建成功!'}" IsShow="{m:Exp Str=SaveAction.State\=\=$End$ or SaveFaKaAction.State\=\=$End$}"/>
     </Grid>
 </UserControl>

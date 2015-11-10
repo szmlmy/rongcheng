@@ -113,7 +113,8 @@
 				f_metergasnums \= \{userfile.DataContext.f_premetergasnums\}\, 
 				f_cumulativepurchase\=\{userfile.DataContext.f_upbuynum\}\, 
 				
-				f_zhye \= \{userfile.DataContext.f_zhye\} 
+				f_zhye \= \{userfile.DataContext.f_zhye\}\,
+                f_jbzyqje\=f_jbzyqje-\{userfile.DataContext.f_grossproceeds\} 
 				where f_userid \= \'\{sellinggas.f_userid\}\' }"/>
 			<!--更新售气记录为无效-->
 			<b:HQLAction Name="UpdateSellgas"   WebClientInfo="{StaticResource dbclient}" 

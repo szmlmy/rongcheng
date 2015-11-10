@@ -651,7 +651,9 @@ Margin="18.667,248.206,381.139,0"/>
 			<TextBlock Text="{m:Exp Str=SysTime.Now}"  HorizontalAlignment="Right" Margin="0,0,884,39" TextWrapping="Wrap" Width="107" Height="20" VerticalAlignment="Bottom"/>
 		
 		</Grid>
-		<c:PrintObj Name="print" Message="是否打印收据" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$ and fapiaogeshi.value\=\=$奥枫发票格式$}" Area="{m:Res Key=aofengprint}"/>
+        <c:MessageTipObj  Name="savedone" Type="MessageBox" Tip="{m:Exp Str='$补卡成功!'}" IsShow="{m:Exp Str=card.State\=\=$End$}"/>
+
+        <c:PrintObj Name="print" Message="是否打印收据" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$ and fapiaogeshi.value\=\=$奥枫发票格式$}" Area="{m:Res Key=aofengprint}"/>
         <c:PrintObj Name="print1" Message="是否打印发票" IsPrint="{m:Exp Str=SaveAction.State\=\=$End$ and fapiaogeshi.value\=\=$国税发票格式$}" Area="{m:Res Key=guoshuiprint}"/>
     </Grid>
 </UserControl>

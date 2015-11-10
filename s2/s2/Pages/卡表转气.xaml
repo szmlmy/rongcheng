@@ -5,6 +5,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:a="clr-namespace:Com.Aote.Attachs;assembly=s2DLL"
     xmlns:o="clr-namespace:Com.Aote.ObjectTools;assembly=s2DLL"
+    xmlns:c="clr-namespace:Com.Aote.Controls;assembly=s2DLL"
 	xmlns:oo="clr-namespace:Com.Aote.ObjectTools"
     xmlns:b="clr-namespace:Com.Aote.Behaviors;assembly=s2DLL"
     xmlns:m="clr-namespace:Com.Aote.Marks;assembly=s2DLL"
@@ -43,7 +44,7 @@
 			HQL="{m:Exp Str=$update t_userfiles set  f_zhye\=\{kbfee.f_yhju- kbfee.f_outmoney\}\,f_jbzyqje\=\{pipelines.SelectedItem.f_jbzyqje- kbfee.f_outmoney\} where f_userid \= \'\{kbfee1.DataContext.f_userid\}\'}"
 		    />
             <b:HQLAction Name="UpdateUserFileKB" Type="sql"
-			HQL="{m:Exp Str=$update t_userfiles set  f_cumulativepurchase\=\{kbfee.f_newsumgasno\}\,f_metergasnums\=\{kbfee.f_newsumgasno\} where f_userid \= \'\{kbfee1.DataContext.f_inid\}\'}"
+			HQL="{m:Exp Str=$update t_userfiles set  f_cumulativepurchase\=\{kbfee.f_newsumgasno\}\,f_metergasnums\=\{kbfee.f_newsumgasno\}\,f_times\=\{kbfee1.DataContext.f_times\} where f_userid \= \'\{kbfee1.DataContext.f_inid\}\'}"
 		    />
             <!--
             <b:HQLAction Name="UpdateUserFile" Type="sql"
@@ -608,9 +609,14 @@
 
 
                     </Grid>
+                            
                 </Grid>
+              
             </toolkit:BusyIndicator>
+           
             <sdk:DataPager x:Name="pager" Source="{Binding Path=ItemsSource.Count,ElementName=pipelines,Converter={StaticResource DataPagerConverter}}"   Margin="1,0,0,45" PageSize="22" Height="24" VerticalAlignment="Bottom"/>
         </Grid>
+        <c:MessageTipObj  Name="savedone" Type="MessageBox" Tip="{m:Exp Str='$转气成功!'}" IsShow="{m:Exp Str=card.State\=\=$End$ |or| card1.State\=\=$End$}"/>
+
     </Grid>
 </UserControl>
